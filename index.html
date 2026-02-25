@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Unknown's Bowling Side Bet Tracker</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #ffffff;
+            color: #333;
+        }
+        h1 {
+            color: #B8860B;
+            text-align: center;
+        }
+        h2, h3 {
+            color: #B8860B;
+        }
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: 1px solid #ddd;
+        }
+        .form-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #555;
+        }
+        input[type="date"], input[type="number"], select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            background: #fff;
+            color: #333;
+        }
+        input[type="number"] {
+            width: 80px;
+        }
+        input[type="number"]:focus, input[type="date"]:focus, select:focus {
+            outline: none;
+            border-color: #B8860B;
+        }
+        button {
+            padding: 10px 20px;
+            background: #B8860B;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #996515;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        button.danger {
+            background: #aa3333;
+            color: white;
+        }
+        button.danger:hover {
+            background: #882222;
+        }
+        .balances {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        .balance-card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 8px;
+            background: #f5f5f5;
+            border: 2px solid #ddd;
+        }
+        .balance-card.positive {
+            background: #e8f5e9;
+            border-color: #4caf50;
+        }
+        .balance-card.negative {
+            background: #ffebee;
+            border-color: #f44336;
+        }
+        .balance-card .name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #B8860B;
+        }
+        .balance-card .amount {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .balance-card.positive .amount {
+            color: #4caf50;
+        }
+        .balance-card.negative .amount {
+            color: #f44336;
+        }
+        .balance-card:not(.positive):not(.negative) .amount {
+            color: #666;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #333;
+            font-weight: 600;
+            color: #B8860B;
+        }
+        .winner {
+            background: #e8f5e9;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .delete-btn {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+        .no-data {
+            color: #999;
+            text-align: center;
+            padding: 40px;
+        }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            background: #f5f5f5;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #666;
+            border: 1px solid #ddd;
+        }
+        .tab:hover {
+            background: #eee;
+        }
+        .tab.active {
+            background: #B8860B;
+            color: #fff;
+            font-weight: bold;
+            border-color: #B8860B;
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+        .payout-summary {
+            margin-top: 15px;
+            padding: 10px;
+            background: #fef8e7;
+            border-radius: 4px;
+            font-size: 14px;
+            border: 1px solid #B8860B;
+        }
+        .player-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 6px;
+            border: 1px solid #eee;
+        }
+        .player-name {
+            font-weight: bold;
+            font-size: 16px;
+            color: #B8860B;
+            width: 60px;
+        }
+        .score-inputs {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .score-inputs .form-group {
+            flex-direction: column;
+        }
+        .score-inputs label {
+            font-size: 12px;
+            color: #777;
+        }
+        .total-display {
+            font-weight: bold;
+            color: #2e7d32;
+            min-width: 60px;
+            text-align: right;
+        }
+        .series-row {
+            background: #fef8e7;
+            font-weight: bold;
+        }
+        .subtitle {
+            color: #666;
+            font-size: 14px;
+            text-align: center;
+            margin-top: -10px;
+            margin-bottom: 20px;
+        }
+        .sync-status {
+            text-align: center;
+            padding: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+        .sync-status.connected {
+            color: #4caf50;
+        }
+        .sync-status.disconnected {
+            color: #f44336;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎳 The Unknown's Bowling Side Bet Tracker</h1>
+    <p class="subtitle">Positive = others owe you | Negative = you owe others</p>
+    <div class="sync-status" id="syncStatus">Connecting...</div>
+
+    <div class="card">
+        <h2>Running Balances</h2>
+        <div class="balances" id="balances"><div class="loading">Loading...</div></div>
+    </div>
+
+    <div class="tabs">
+        <div class="tab active" data-tab="enter">Enter Scores</div>
+        <div class="tab" data-tab="history">Game History</div>
+    </div>
+
+    <div id="enter" class="section active">
+        <div class="card">
+            <h2>Enter Game Scores</h2>
+            <form id="scoreForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" id="gameDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Game</label>
+                        <select id="gameNumber" required>
+                            <option value="1">Game 1</option>
+                            <option value="2">Game 2</option>
+                            <option value="3">Game 3</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="playerInputs"></div>
+
+                <button type="submit" id="submitBtn">Add Game</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="history" class="section">
+        <div class="card">
+            <h2>Game History</h2>
+            <div id="gameHistory"><div class="loading">Loading...</div></div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAmw5r5WxdNqgEoFBAAtVH6_u4AY4aNuf4",
+            authDomain: "bowling-tracker-422ae.firebaseapp.com",
+            projectId: "bowling-tracker-422ae",
+            storageBucket: "bowling-tracker-422ae.firebasestorage.app",
+            messagingSenderId: "615292433054",
+            appId: "1:615292433054:web:1840866499248469ef818f"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        const PLAYERS = ['Nick', 'Kevin', 'Cub', 'Matt'];
+        const BET_AMOUNT = 2;
+
+        // Current data (updated by real-time listener)
+        let currentData = { games: [] };
+
+        // Initialize
+        document.getElementById('gameDate').valueAsDate = new Date();
+
+        // Generate player input rows
+        function generatePlayerInputs() {
+            const container = document.getElementById('playerInputs');
+            container.innerHTML = PLAYERS.map(player => `
+                <div class="player-row">
+                    <div class="player-name">${player}</div>
+                    <div class="score-inputs">
+                        <div class="form-group">
+                            <label>Score</label>
+                            <input type="number" id="score_${player}" min="0" max="300" required placeholder="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Handicap</label>
+                            <input type="number" id="handicap_${player}" min="0" max="100" required placeholder="0">
+                        </div>
+                        <div class="total-display" id="total_${player}">= 0</div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Add listeners to update totals
+            PLAYERS.forEach(player => {
+                const scoreInput = document.getElementById(`score_${player}`);
+                const handicapInput = document.getElementById(`handicap_${player}`);
+
+                const updateTotal = () => {
+                    const score = parseInt(scoreInput.value) || 0;
+                    const handicap = parseInt(handicapInput.value) || 0;
+                    document.getElementById(`total_${player}`).textContent = `= ${score + handicap}`;
+                };
+
+                scoreInput.addEventListener('input', updateTotal);
+                handicapInput.addEventListener('input', updateTotal);
+            });
+        }
+
+        generatePlayerInputs();
+
+        // Set up real-time listener for games
+        function setupRealtimeListener() {
+            const statusEl = document.getElementById('syncStatus');
+
+            db.collection('games').orderBy('date', 'desc').onSnapshot(
+                (snapshot) => {
+                    statusEl.textContent = '● Live synced';
+                    statusEl.className = 'sync-status connected';
+
+                    currentData.games = snapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+
+                    renderBalances();
+                    renderHistory();
+                },
+                (error) => {
+                    console.error('Firestore error:', error);
+                    statusEl.textContent = '● Disconnected';
+                    statusEl.className = 'sync-status disconnected';
+                }
+            );
+        }
+
+        // Save game to Firestore
+        async function saveGame(gameData) {
+            try {
+                await db.collection('games').add(gameData);
+                return true;
+            } catch (error) {
+                console.error('Error saving game:', error);
+                alert('Error saving game. Please try again.');
+                return false;
+            }
+        }
+
+        // Delete game from Firestore
+        async function deleteGame(id) {
+            if (!confirm('Delete this game?')) return;
+
+            try {
+                await db.collection('games').doc(id).delete();
+            } catch (error) {
+                console.error('Error deleting game:', error);
+                alert('Error deleting game. Please try again.');
+            }
+        }
+
+        // Calculate winnings for a single game (returns payout adjustments)
+        function calculateGameWinnings(scores) {
+            const payouts = {};
+            PLAYERS.forEach(p => payouts[p] = 0);
+
+            const maxScore = Math.max(...PLAYERS.map(p => scores[p]));
+            const winners = PLAYERS.filter(p => scores[p] === maxScore);
+            const losers = PLAYERS.filter(p => scores[p] < maxScore);
+
+            if (winners.length === PLAYERS.length) {
+                // Everyone tied - no payouts
+                return payouts;
+            }
+
+            // Each loser pays $2 total, split among winners
+            const winningsPerWinner = (losers.length * BET_AMOUNT) / winners.length;
+
+            winners.forEach(w => payouts[w] = winningsPerWinner);
+            losers.forEach(l => payouts[l] = -BET_AMOUNT);
+
+            return payouts;
+        }
+
+        // Get all games for a specific date
+        function getGamesForDate(data, date) {
+            return data.games.filter(g => g.date === date);
+        }
+
+        // Calculate series total for a date
+        function calculateSeriesTotal(data, date) {
+            const dateGames = getGamesForDate(data, date);
+            if (dateGames.length !== 3) return null;
+
+            const totals = {};
+            PLAYERS.forEach(p => totals[p] = 0);
+
+            dateGames.forEach(game => {
+                PLAYERS.forEach(p => {
+                    totals[p] += game.scores[p];
+                });
+            });
+
+            return totals;
+        }
+
+        // Calculate all balances
+        function calculateBalances(data) {
+            const balances = {};
+            PLAYERS.forEach(p => balances[p] = 0);
+
+            // Track which dates have had series totals calculated
+            const seriesDates = new Set();
+
+            data.games.forEach(game => {
+                // Individual game winnings
+                const gamePayouts = calculateGameWinnings(game.scores);
+                PLAYERS.forEach(p => balances[p] += gamePayouts[p]);
+
+                // Check for series total (only once per complete date)
+                if (!seriesDates.has(game.date)) {
+                    const seriesTotal = calculateSeriesTotal(data, game.date);
+                    if (seriesTotal) {
+                        const seriesPayouts = calculateGameWinnings(seriesTotal);
+                        PLAYERS.forEach(p => balances[p] += seriesPayouts[p]);
+                        seriesDates.add(game.date);
+                    }
+                }
+            });
+
+            return balances;
+        }
+
+        // Render balances
+        function renderBalances() {
+            const balances = calculateBalances(currentData);
+
+            const container = document.getElementById('balances');
+            container.innerHTML = PLAYERS.map(player => {
+                const amount = balances[player];
+                const className = amount > 0 ? 'positive' : amount < 0 ? 'negative' : '';
+                const sign = amount > 0 ? '+' : '';
+                return `
+                    <div class="balance-card ${className}">
+                        <div class="name">${player}</div>
+                        <div class="amount">${sign}$${amount.toFixed(2)}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Render game history
+        function renderHistory() {
+            const container = document.getElementById('gameHistory');
+
+            if (currentData.games.length === 0) {
+                container.innerHTML = '<p class="no-data">No games recorded yet.</p>';
+                return;
+            }
+
+            // Group games by date
+            const gamesByDate = {};
+            currentData.games.forEach(game => {
+                if (!gamesByDate[game.date]) {
+                    gamesByDate[game.date] = [];
+                }
+                gamesByDate[game.date].push(game);
+            });
+
+            // Sort dates descending
+            const sortedDates = Object.keys(gamesByDate).sort().reverse();
+
+            let html = '';
+            sortedDates.forEach(date => {
+                const dateGames = gamesByDate[date].sort((a, b) => a.gameNumber - b.gameNumber);
+                const formattedDate = new Date(date + 'T12:00:00').toLocaleDateString('en-US', {
+                    weekday: 'short', month: 'short', day: 'numeric'
+                });
+
+                html += `<h3>${formattedDate}</h3>`;
+                html += '<table><thead><tr><th>Game</th>';
+                PLAYERS.forEach(p => html += `<th>${p}</th>`);
+                html += '<th>Winner(s)</th><th></th></tr></thead><tbody>';
+
+                dateGames.forEach(game => {
+                    const maxScore = Math.max(...PLAYERS.map(p => game.scores[p]));
+                    const winners = PLAYERS.filter(p => game.scores[p] === maxScore);
+
+                    html += `<tr><td>Game ${game.gameNumber}</td>`;
+                    PLAYERS.forEach(p => {
+                        const isWinner = game.scores[p] === maxScore;
+                        html += `<td class="${isWinner ? 'winner' : ''}">${game.scores[p]}</td>`;
+                    });
+                    html += `<td>${winners.join(', ')}</td>`;
+                    html += `<td><button class="danger delete-btn" onclick="deleteGame('${game.id}')">Delete</button></td>`;
+                    html += '</tr>';
+                });
+
+                // Series total row if all 3 games recorded
+                if (dateGames.length === 3) {
+                    const totals = {};
+                    PLAYERS.forEach(p => totals[p] = 0);
+                    dateGames.forEach(g => PLAYERS.forEach(p => totals[p] += g.scores[p]));
+
+                    const maxTotal = Math.max(...PLAYERS.map(p => totals[p]));
+                    const seriesWinners = PLAYERS.filter(p => totals[p] === maxTotal);
+
+                    html += '<tr class="series-row"><td>SERIES TOTAL</td>';
+                    PLAYERS.forEach(p => {
+                        const isWinner = totals[p] === maxTotal;
+                        html += `<td class="${isWinner ? 'winner' : ''}">${totals[p]}</td>`;
+                    });
+                    html += `<td>${seriesWinners.join(', ')}</td><td></td></tr>`;
+                }
+
+                html += '</tbody></table>';
+
+                // Payout summary for this date
+                const payoutSummary = calculateDatePayouts(currentData, date);
+                if (payoutSummary) {
+                    html += `<div class="payout-summary"><strong>Day's Winnings:</strong> ${payoutSummary}</div>`;
+                }
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Calculate payouts for a specific date
+        function calculateDatePayouts(data, date) {
+            const dateGames = getGamesForDate(data, date);
+            if (dateGames.length === 0) return null;
+
+            const dayBalances = {};
+            PLAYERS.forEach(p => dayBalances[p] = 0);
+
+            dateGames.forEach(game => {
+                const payouts = calculateGameWinnings(game.scores);
+                PLAYERS.forEach(p => dayBalances[p] += payouts[p]);
+            });
+
+            // Add series total if complete
+            if (dateGames.length === 3) {
+                const seriesTotal = calculateSeriesTotal(data, date);
+                const seriesPayouts = calculateGameWinnings(seriesTotal);
+                PLAYERS.forEach(p => dayBalances[p] += seriesPayouts[p]);
+            }
+
+            return PLAYERS
+                .filter(p => dayBalances[p] !== 0)
+                .map(p => {
+                    const sign = dayBalances[p] > 0 ? '+' : '';
+                    return `${p}: ${sign}$${dayBalances[p].toFixed(2)}`;
+                })
+                .join(' | ');
+        }
+
+        // Form submission
+        document.getElementById('scoreForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Saving...';
+
+            const date = document.getElementById('gameDate').value;
+            const gameNumber = parseInt(document.getElementById('gameNumber').value);
+
+            // Check if this game already exists
+            const existing = currentData.games.find(g => g.date === date && g.gameNumber === gameNumber);
+            if (existing) {
+                if (!confirm(`Game ${gameNumber} for this date already exists. Replace it?`)) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Add Game';
+                    return;
+                }
+                await db.collection('games').doc(existing.id).delete();
+            }
+
+            const scores = {};
+            PLAYERS.forEach(p => {
+                const score = parseInt(document.getElementById(`score_${p}`).value) || 0;
+                const handicap = parseInt(document.getElementById(`handicap_${p}`).value) || 0;
+                scores[p] = score + handicap;
+            });
+
+            const success = await saveGame({
+                date,
+                gameNumber,
+                scores,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Add Game';
+
+            if (success) {
+                // Clear scores but keep date
+                PLAYERS.forEach(p => {
+                    document.getElementById(`score_${p}`).value = '';
+                    document.getElementById(`handicap_${p}`).value = '';
+                    document.getElementById(`total_${p}`).textContent = '= 0';
+                });
+
+                // Auto-advance game number
+                if (gameNumber < 3) {
+                    document.getElementById('gameNumber').value = gameNumber + 1;
+                }
+            }
+        });
+
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+
+                this.classList.add('active');
+                document.getElementById(this.dataset.tab).classList.add('active');
+            });
+        });
+
+        // Start real-time listener
+        setupRealtimeListener();
+    </script>
+</body>
+</html>
