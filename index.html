@@ -364,8 +364,8 @@
 
                 <div class="example-box">
                     <strong>Three-Way Tie (3 winners, 1 loser)</strong><br>
-                    Each winner receives $2 from the loser, split three ways = <strong>+$0.67 each</strong><br>
-                    The loser pays = <strong>-$2</strong>
+                    Each winner receives <strong>+$1</strong> from the loser<br>
+                    The loser pays = <strong>-$3</strong>
                 </div>
 
                 <div class="example-box">
@@ -508,7 +508,15 @@
                 return payouts;
             }
 
-            // Each loser pays $2 total, split among winners
+            // Special case: 3-way tie (3 winners, 1 loser)
+            // Loser pays $3 ($1 to each winner) to keep amounts whole
+            if (winners.length === 3 && losers.length === 1) {
+                winners.forEach(w => payouts[w] = 1);
+                losers.forEach(l => payouts[l] = -3);
+                return payouts;
+            }
+
+            // Standard case: Each loser pays $2 total, split among winners
             const winningsPerWinner = (losers.length * BET_AMOUNT) / winners.length;
 
             winners.forEach(w => payouts[w] = winningsPerWinner);
