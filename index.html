@@ -257,6 +257,34 @@
             padding: 40px;
             color: #666;
         }
+        .rules-section {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .rules-section h3 {
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .rules-section h3:first-child {
+            margin-top: 0;
+        }
+        .rules-section ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .rules-section li {
+            margin-bottom: 8px;
+        }
+        .example-box {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 10px 0;
+        }
+        .example-box strong {
+            color: #B8860B;
+        }
     </style>
 </head>
 <body>
@@ -272,6 +300,7 @@
     <div class="tabs">
         <div class="tab active" data-tab="enter">Enter Scores</div>
         <div class="tab" data-tab="history">Game History</div>
+        <div class="tab" data-tab="rules">Rules</div>
     </div>
 
     <div id="enter" class="section active">
@@ -304,6 +333,49 @@
         <div class="card">
             <h2>Game History</h2>
             <div id="gameHistory"><div class="loading">Loading...</div></div>
+        </div>
+    </div>
+
+    <div id="rules" class="section">
+        <div class="card">
+            <h2>How Payouts Work</h2>
+            <div class="rules-section">
+                <h3>Per Game &amp; Series Total</h3>
+                <p>Each bowling night has <strong>4 betting opportunities</strong>: Game 1, Game 2, Game 3, and the Series Total (sum of all 3 games). Each works the same way:</p>
+                <ul>
+                    <li>Every player puts in <strong>$2</strong> per game/series</li>
+                    <li>Highest score (with handicap) wins the pot</li>
+                    <li>Ties split the winnings</li>
+                </ul>
+
+                <h3>Payout Scenarios</h3>
+
+                <div class="example-box">
+                    <strong>Sole Winner (1 winner, 3 losers)</strong><br>
+                    Winner receives $2 from each loser = <strong>+$6</strong><br>
+                    Each loser pays = <strong>-$2</strong>
+                </div>
+
+                <div class="example-box">
+                    <strong>Two-Way Tie (2 winners, 2 losers)</strong><br>
+                    Each winner receives $2 from each loser, split between them = <strong>+$2 each</strong><br>
+                    Each loser pays = <strong>-$2</strong>
+                </div>
+
+                <div class="example-box">
+                    <strong>Three-Way Tie (3 winners, 1 loser)</strong><br>
+                    Each winner receives $2 from the loser, split three ways = <strong>+$0.67 each</strong><br>
+                    The loser pays = <strong>-$2</strong>
+                </div>
+
+                <div class="example-box">
+                    <strong>Four-Way Tie (everyone ties)</strong><br>
+                    No money changes hands = <strong>$0 for everyone</strong>
+                </div>
+
+                <h3>Maximum Winnings Per Night</h3>
+                <p>If one player wins all 4 (Game 1, Game 2, Game 3, and Series Total), they'd win <strong>$24</strong> total ($6 x 4). Each loser would be down <strong>$8</strong> ($2 x 4).</p>
+            </div>
         </div>
     </div>
 
