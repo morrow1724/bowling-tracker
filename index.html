@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Unknown's Bowling Side Bet Tracker</title>
+    <title>The Unknown's Bowling Hub</title>
     <style>
         * {
             box-sizing: border-box;
@@ -159,18 +159,37 @@
             text-align: center;
             padding: 40px;
         }
+        .tab-sections {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .tab-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .tab-group-label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #B8860B;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding-left: 4px;
+        }
         .tabs {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 8px;
         }
         .tab {
-            padding: 10px 20px;
+            padding: 10px 16px;
             background: #f5f5f5;
             border-radius: 4px;
             cursor: pointer;
             color: #666;
             border: 1px solid #ddd;
+            font-size: 14px;
         }
         .tab:hover {
             background: #eee;
@@ -285,22 +304,237 @@
         .example-box strong {
             color: #B8860B;
         }
+        /* League Scores Styles */
+        .league-week {
+            margin-bottom: 25px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .league-week-header {
+            background: #333;
+            color: #B8860B;
+            padding: 12px 15px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+        }
+        .league-week table {
+            margin-top: 0;
+        }
+        .rank-1st {
+            background: #fff8e1 !important;
+            color: #b8860b !important;
+            font-weight: bold;
+        }
+        .rank-2nd {
+            background: #f5f5f5 !important;
+            color: #666 !important;
+        }
+        .rank-3rd {
+            background: #fff3e0 !important;
+            color: #a0522d !important;
+        }
+        .rank-4th {
+            background: #fafafa !important;
+            color: #bbb !important;
+        }
+        .rank-badge {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 11px;
+            font-weight: bold;
+            line-height: 20px;
+            text-align: center;
+            margin-left: 5px;
+        }
+        .rank-badge.r1 {
+            background: #ffd700;
+            color: #333;
+        }
+        .rank-badge.r2 {
+            background: #d0d0d0;
+            color: #555;
+        }
+        .rank-badge.r3 {
+            background: #deb887;
+            color: #5a3d1a;
+        }
+        .rank-badge.r4 {
+            background: #e8e8e8;
+            color: #888;
+        }
+        .league-table td, .league-table th {
+            padding: 8px 12px;
+        }
+        .league-table .score-cell {
+            font-weight: 500;
+        }
+        .sub-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        .sub-tab {
+            padding: 8px 16px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #666;
+            border: 1px solid #ddd;
+        }
+        .sub-tab:hover {
+            background: #e5e5e5;
+        }
+        .sub-tab.active {
+            background: #B8860B;
+            color: #fff;
+            font-weight: bold;
+            border-color: #B8860B;
+        }
+        /* Leaderboard styles */
+        .leaderboard-section {
+            margin-bottom: 30px;
+        }
+        .leaderboard-section:last-child {
+            margin-bottom: 0;
+        }
+        .leaderboard-section h3 {
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #B8860B;
+        }
+        .leaderboard-section h4 {
+            color: #555;
+            font-size: 14px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .leaderboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 600px) {
+            .leaderboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .leaderboard-table-container {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid #eee;
+        }
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .leaderboard-table th, .leaderboard-table td {
+            padding: 10px 8px;
+            text-align: center;
+        }
+        .leaderboard-table th {
+            background: #333;
+            color: #B8860B;
+            font-size: 13px;
+        }
+        .leaderboard-table th:first-child {
+            text-align: left;
+            border-radius: 4px 0 0 0;
+        }
+        .leaderboard-table th:last-child {
+            border-radius: 0 4px 0 0;
+        }
+        .leaderboard-table td:first-child {
+            text-align: left;
+            font-weight: bold;
+            color: #B8860B;
+        }
+        .leaderboard-table tbody tr:nth-child(odd) {
+            background: #fff;
+        }
+        .leaderboard-table tbody tr:hover {
+            background: #fef8e7;
+        }
+        .leaderboard-table .count-1st {
+            color: #B8860B;
+            font-weight: bold;
+        }
+        .leaderboard-table .count-2nd {
+            color: #666;
+        }
+        .leaderboard-table .count-3rd {
+            color: #8B4513;
+        }
+        .leaderboard-table .count-4th {
+            color: #999;
+        }
+        .leaderboard-table .points-col {
+            font-weight: bold;
+            color: #2e7d32;
+            background: #e8f5e9;
+        }
+        .points-explanation {
+            background: #fef8e7;
+            border: 1px solid #B8860B;
+            border-radius: 6px;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .points-explanation strong {
+            color: #B8860B;
+        }
+        .leaderboard-table .money-col {
+            font-weight: bold;
+        }
+        .leaderboard-table .money-col.positive {
+            color: #2e7d32;
+            background: #e8f5e9;
+        }
+        .leaderboard-table .money-col.negative {
+            color: #c62828;
+            background: #ffebee;
+        }
+        .leaderboard-table .money-col.zero {
+            color: #666;
+            background: #f5f5f5;
+        }
     </style>
 </head>
 <body>
-    <h1>🎳 The Unknown's Bowling Side Bet Tracker</h1>
-    <p class="subtitle">Positive = others owe you | Negative = you owe others</p>
+    <h1>🎳 The Unknown's Bowling Hub</h1>
     <div class="sync-status" id="syncStatus">Connecting...</div>
 
     <div class="card">
         <h2>Running Balances</h2>
+        <p class="subtitle" style="margin-top: -5px; margin-bottom: 15px;">Positive = others owe you | Negative = you owe others</p>
         <div class="balances" id="balances"><div class="loading">Loading...</div></div>
     </div>
 
-    <div class="tabs">
-        <div class="tab active" data-tab="enter">Enter Scores</div>
-        <div class="tab" data-tab="history">Game History</div>
-        <div class="tab" data-tab="rules">Rules</div>
+    <div class="tab-sections">
+        <div class="tab-group">
+            <div class="tab-group-label">Side Bets</div>
+            <div class="tabs">
+                <div class="tab active" data-tab="enter">Enter Scores</div>
+                <div class="tab" data-tab="history">History</div>
+                <div class="tab" data-tab="sidebetleaderboard">Leaderboard</div>
+                <div class="tab" data-tab="rules">Rules</div>
+            </div>
+        </div>
+        <div class="tab-group">
+            <div class="tab-group-label">League Stats</div>
+            <div class="tabs">
+                <div class="tab" data-tab="league">Scores</div>
+                <div class="tab" data-tab="leaderboard">Leaderboard</div>
+            </div>
+        </div>
     </div>
 
     <div id="enter" class="section active">
@@ -333,6 +567,64 @@
         <div class="card">
             <h2>Game History</h2>
             <div id="gameHistory"><div class="loading">Loading...</div></div>
+        </div>
+    </div>
+
+    <div id="league" class="section">
+        <div class="card">
+            <h2>League Scores by Week</h2>
+            <div class="sub-tabs">
+                <div class="sub-tab active" data-subtab="scratch">Scratch</div>
+                <div class="sub-tab" data-subtab="handicap">Handicap</div>
+            </div>
+            <div id="leagueScores"></div>
+        </div>
+    </div>
+
+    <div id="sidebetleaderboard" class="section">
+        <div class="card">
+            <h2>Side Bet Leaderboard</h2>
+            <p class="subtitle" style="margin-top: 0;">Wins and earnings from side bet nights</p>
+            <div id="sideBetLeaderboard"><div class="loading">Loading...</div></div>
+        </div>
+    </div>
+
+    <div id="leaderboard" class="section">
+        <div class="card">
+            <h2>League Leaderboard</h2>
+            <p class="subtitle" style="margin-top: 0;">Season placement rankings</p>
+
+            <div class="points-explanation">
+                <strong>Points System:</strong> 1st = 4 pts | 2nd = 3 pts | 3rd = 2 pts | 4th = 1 pt
+            </div>
+
+            <div class="leaderboard-section">
+                <h3>Scratch Scores</h3>
+                <div class="leaderboard-grid">
+                    <div class="leaderboard-table-container">
+                        <h4>Individual Games</h4>
+                        <div id="scratchGamesLeaderboard"></div>
+                    </div>
+                    <div class="leaderboard-table-container">
+                        <h4>Series</h4>
+                        <div id="scratchSeriesLeaderboard"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="leaderboard-section">
+                <h3>League Handicap Scores</h3>
+                <div class="leaderboard-grid">
+                    <div class="leaderboard-table-container">
+                        <h4>Individual Games</h4>
+                        <div id="handicapGamesLeaderboard"></div>
+                    </div>
+                    <div class="leaderboard-table-container">
+                        <h4>Series</h4>
+                        <div id="handicapSeriesLeaderboard"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -462,6 +754,7 @@
 
                     renderBalances();
                     renderHistory();
+                    renderSideBetLeaderboards();
                 },
                 (error) => {
                     console.error('Firestore error:', error);
@@ -762,6 +1055,492 @@
                 document.getElementById(this.dataset.tab).classList.add('active');
             });
         });
+
+        // League scores data (from LeaguePals CSV exports)
+        // Includes scratch scores and handicap per game for each player
+        const LEAGUE_DATA = [
+            { week: 1, date: '9/10/2025', opponent: 'CONSISTENTLY INCONSISTENT', scores: {
+                Nick: { gm1: 152, gm2: 86, gm3: 95, series: 333, hdcp: 107 },
+                Kevin: { gm1: 174, gm2: 192, gm3: 168, series: 534, hdcp: 46 },
+                Cub: { gm1: 132, gm2: 177, gm3: 201, series: 510, hdcp: 54 },
+                Matt: { gm1: 201, gm2: 156, gm3: 147, series: 504, hdcp: 55 }
+            }},
+            { week: 2, date: '9/17/2025', opponent: 'High Expectations', scores: {
+                Nick: { gm1: 144, gm2: 167, gm3: 153, series: 464, hdcp: 107 },
+                Kevin: { gm1: 169, gm2: 222, gm3: 173, series: 564, hdcp: 46 },
+                Cub: { gm1: 163, gm2: 134, gm3: 146, series: 443, hdcp: 54 },
+                Matt: { gm1: 184, gm2: 187, gm3: 194, series: 565, hdcp: 55 }
+            }},
+            { week: 3, date: '9/24/2025', opponent: 'PROBE-ABLY HARMLESS', scores: {
+                Nick: { gm1: 108, gm2: 107, gm3: 124, series: 339, hdcp: 88 },
+                Kevin: { gm1: 139, gm2: 167, gm3: 160, series: 466, hdcp: 42 },
+                Cub: { gm1: 154, gm2: 145, gm3: 170, series: 469, hdcp: 64 },
+                Matt: { gm1: 156, gm2: 174, gm3: 166, series: 496, hdcp: 46 }
+            }},
+            { week: 4, date: '10/1/2025', opponent: 'Ingenious Rollers', scores: {
+                Nick: { gm1: 133, gm2: 107, gm3: 90, series: 330, hdcp: 93 },
+                Kevin: { gm1: 157, gm2: 214, gm3: 200, series: 571, hdcp: 51 },
+                Cub: { gm1: 115, gm2: 114, gm3: 115, series: 344, hdcp: 64 },
+                Matt: { gm1: 192, gm2: 146, gm3: 169, series: 507, hdcp: 51 }
+            }},
+            { week: 5, date: '10/8/2025', opponent: 'Total Quality Lanes', scores: {
+                Nick: { gm1: 142, gm2: 92, gm3: 105, series: 339, hdcp: 97 },
+                Kevin: { gm1: 153, gm2: 144, gm3: 185, series: 482, hdcp: 47 },
+                Cub: { gm1: 161, gm2: 167, gm3: 123, series: 451, hdcp: 74 },
+                Matt: { gm1: 203, gm2: 172, gm3: 142, series: 517, hdcp: 52 }
+            }},
+            { week: 6, date: '10/15/2025', opponent: 'Mind N Da Gutter', scores: {
+                Nick: { gm1: 126, gm2: 114, gm3: 128, series: 368, hdcp: 99 },
+                Kevin: { gm1: 145, gm2: 130, gm3: 195, series: 470, hdcp: 50 },
+                Cub: { gm1: 178, gm2: 153, gm3: 99, series: 430, hdcp: 74 },
+                Matt: { gm1: 166, gm2: 170, gm3: 133, series: 469, hdcp: 52 }
+            }},
+            { week: 7, date: '10/22/2025', opponent: 'Team 5', scores: {
+                Nick: { gm1: 76, gm2: 76, gm3: 134, series: 286, hdcp: 99 },
+                Kevin: { gm1: 218, gm2: 184, gm3: 201, series: 603, hdcp: 53 },
+                Cub: { gm1: 151, gm2: 148, gm3: 154, series: 453, hdcp: 74 },
+                Matt: { gm1: 182, gm2: 181, gm3: 176, series: 539, hdcp: 54 }
+            }},
+            { week: 8, date: '10/29/2025', opponent: 'Throwin Shade', scores: {
+                Nick: { gm1: 110, gm2: 124, gm3: 172, series: 406, hdcp: 101 },
+                Kevin: { gm1: 138, gm2: 147, gm3: 200, series: 485, hdcp: 49 },
+                Cub: { gm1: 166, gm2: 188, gm3: 186, series: 540, hdcp: 74 },
+                Matt: { gm1: 214, gm2: 230, gm3: 221, series: 665, hdcp: 53 }
+            }},
+            { week: 9, date: '11/5/2025', opponent: '6 balls 1 split', scores: {
+                Nick: { gm1: 131, gm2: 95, gm3: 124, series: 350, hdcp: 99 },
+                Kevin: { gm1: 154, gm2: 214, gm3: 191, series: 559, hdcp: 51 },
+                Cub: { gm1: 144, gm2: 137, gm3: 141, series: 422, hdcp: 71 },
+                Matt: { gm1: 131, gm2: 218, gm3: 204, series: 553, hdcp: 47 }
+            }},
+            { week: 10, date: '11/12/2025', opponent: 'HERE 4 BEER', scores: {
+                Nick: { gm1: 118, gm2: 112, gm3: 125, series: 355, hdcp: 99 },
+                Kevin: { gm1: 235, gm2: 203, gm3: 178, series: 616, hdcp: 49 },
+                Cub: { gm1: 145, gm2: 161, gm3: 153, series: 459, hdcp: 72 },
+                Matt: { gm1: 203, gm2: 199, gm3: 173, series: 575, hdcp: 46 }
+            }},
+            { week: 11, date: '11/19/2025', opponent: 'Chesapeake Bay Rollers', scores: {
+                Nick: { gm1: 133, gm2: 98, gm3: 150, series: 381, hdcp: 99 },
+                Kevin: { gm1: 157, gm2: 181, gm3: 252, series: 590, hdcp: 46 },
+                Cub: { gm1: 188, gm2: 177, gm3: 144, series: 509, hdcp: 72 },
+                Matt: { gm1: 210, gm2: 218, gm3: 158, series: 586, hdcp: 45 }
+            }},
+            { week: 12, date: '12/3/2025', opponent: 'Ten Pin Ticklers', scores: {
+                Nick: { gm1: 150, gm2: 131, gm3: 130, series: 411, hdcp: 99 },
+                Kevin: { gm1: 191, gm2: 135, gm3: 170, series: 496, hdcp: 45 },
+                Cub: { gm1: 132, gm2: 148, gm3: 167, series: 447, hdcp: 70 },
+                Matt: { gm1: 147, gm2: 135, gm3: 171, series: 453, hdcp: 44 }
+            }},
+            { week: 13, date: '12/10/2025', opponent: 'BALLS DEEP', scores: {
+                Nick: { gm1: 147, gm2: 133, gm3: 114, series: 394, hdcp: 98 },
+                Kevin: { gm1: 139, gm2: 217, gm3: 185, series: 541, hdcp: 46 },
+                Cub: { gm1: 174, gm2: 177, gm3: 145, series: 496, hdcp: 70 },
+                Matt: { gm1: 139, gm2: 143, gm3: 223, series: 505, hdcp: 46 }
+            }},
+            { week: 14, date: '12/17/2025', opponent: 'Black Storm', scores: {
+                Nick: { gm1: 145, gm2: 120, gm3: 147, series: 412, hdcp: 98 },
+                Kevin: { gm1: 147, gm2: 185, gm3: 225, series: 557, hdcp: 46 },
+                Cub: { gm1: 125, gm2: 129, gm3: 176, series: 430, hdcp: 69 },
+                Matt: { gm1: 158, gm2: 162, gm3: 213, series: 533, hdcp: 47 }
+            }},
+            { week: 15, date: '1/7/2026', opponent: 'Gutterly Ridiculous', scores: {
+                Nick: { gm1: 136, gm2: 170, gm3: 190, series: 496, hdcp: 96 },
+                Kevin: { gm1: 192, gm2: 153, gm3: 163, series: 508, hdcp: 45 },
+                Cub: { gm1: 160, gm2: 182, gm3: 160, series: 502, hdcp: 70 },
+                Matt: { gm1: 162, gm2: 191, gm3: 147, series: 500, hdcp: 47 }
+            }},
+            { week: 16, date: '1/14/2026', opponent: 'The Jeffersons', scores: {
+                Nick: { gm1: 109, gm2: 149, gm3: 158, series: 416, hdcp: 94 },
+                Kevin: { gm1: 222, gm2: 200, gm3: 200, series: 622, hdcp: 46 },
+                Cub: { gm1: 139, gm2: 213, gm3: 278, series: 630, hdcp: 69 },
+                Matt: { gm1: 199, gm2: 163, gm3: 199, series: 561, hdcp: 47 }
+            }},
+            { week: 17, date: '1/21/2026', opponent: 'DJENerates', scores: {
+                Nick: { gm1: 121, gm2: 137, gm3: 135, series: 393, hdcp: 93 },
+                Kevin: { gm1: 182, gm2: 184, gm3: 211, series: 577, hdcp: 45 },
+                Cub: { gm1: 164, gm2: 152, gm3: 168, series: 484, hdcp: 66 },
+                Matt: { gm1: 176, gm2: 159, gm3: 161, series: 496, hdcp: 47 }
+            }},
+            { week: 18, date: '1/28/2026', opponent: 'Long Shots', scores: {
+                Nick: { gm1: 96, gm2: 124, gm3: 196, series: 416, hdcp: 93 },
+                Kevin: { gm1: 162, gm2: 173, gm3: 201, series: 536, hdcp: 44 },
+                Cub: { gm1: null, gm2: null, gm3: null, series: null, hdcp: null },
+                Matt: { gm1: 216, gm2: 227, gm3: 233, series: 676, hdcp: 48 }
+            }},
+            { week: 19, date: '2/4/2026', opponent: 'Balls Mafia', scores: {
+                Nick: { gm1: 143, gm2: 190, gm3: 169, series: 502, hdcp: 92 },
+                Kevin: { gm1: 168, gm2: 161, gm3: 237, series: 566, hdcp: 44 },
+                Cub: { gm1: 213, gm2: 203, gm3: 260, series: 676, hdcp: 65 },
+                Matt: { gm1: 155, gm2: 184, gm3: 177, series: 516, hdcp: 45 }
+            }},
+            { week: 20, date: '2/11/2026', opponent: 'Pinfall', scores: {
+                Nick: { gm1: 100, gm2: 129, gm3: 138, series: 367, hdcp: 90 },
+                Kevin: { gm1: 186, gm2: 147, gm3: 190, series: 523, hdcp: 44 },
+                Cub: { gm1: 161, gm2: 192, gm3: 192, series: 545, hdcp: 62 },
+                Matt: { gm1: 178, gm2: 181, gm3: 204, series: 563, hdcp: 45 }
+            }},
+            { week: 21, date: '2/18/2026', opponent: 'Team Takeover', scores: {
+                Nick: { gm1: 106, gm2: 161, gm3: 133, series: 400, hdcp: 90 },
+                Kevin: { gm1: 237, gm2: 207, gm3: 134, series: 578, hdcp: 44 },
+                Cub: { gm1: 150, gm2: 152, gm3: 166, series: 468, hdcp: 61 },
+                Matt: { gm1: 143, gm2: 183, gm3: 180, series: 506, hdcp: 45 }
+            }},
+            { week: 22, date: '2/25/2026', opponent: 'Stars N Strikes', scores: {
+                Nick: { gm1: 156, gm2: 192, gm3: 150, series: 498, hdcp: 90 },
+                Kevin: { gm1: 209, gm2: 150, gm3: 169, series: 528, hdcp: 44 },
+                Cub: { gm1: 204, gm2: 224, gm3: 107, series: 535, hdcp: 62 },
+                Matt: { gm1: 191, gm2: 212, gm3: 176, series: 579, hdcp: 45 }
+            }}
+        ];
+
+        // Current league view mode
+        let leagueViewMode = 'scratch';
+
+        // Get scores based on view mode (scratch or handicap)
+        function getScoresForMode(weekData, mode) {
+            const scores = {};
+            PLAYERS.forEach(player => {
+                const p = weekData.scores[player];
+                if (p.gm1 === null) {
+                    scores[player] = { gm1: null, gm2: null, gm3: null, series: null };
+                } else if (mode === 'scratch') {
+                    scores[player] = { gm1: p.gm1, gm2: p.gm2, gm3: p.gm3, series: p.series };
+                } else {
+                    // Handicap mode: add hdcp to each game
+                    scores[player] = {
+                        gm1: p.gm1 + p.hdcp,
+                        gm2: p.gm2 + p.hdcp,
+                        gm3: p.gm3 + p.hdcp,
+                        series: p.series + (p.hdcp * 3)
+                    };
+                }
+            });
+            return scores;
+        }
+
+        // Calculate rank for each player in a game
+        function calculateRanks(scores, key) {
+            const validScores = PLAYERS.filter(p => scores[p][key] !== null);
+            const sorted = [...validScores].sort((a, b) => scores[b][key] - scores[a][key]);
+            const ranks = {};
+
+            sorted.forEach((player, idx) => {
+                // Handle ties - players with same score get same rank
+                if (idx > 0 && scores[player][key] === scores[sorted[idx - 1]][key]) {
+                    ranks[player] = ranks[sorted[idx - 1]];
+                } else {
+                    ranks[player] = idx + 1;
+                }
+            });
+
+            // Mark absent players
+            PLAYERS.forEach(p => {
+                if (scores[p][key] === null) {
+                    ranks[p] = null;
+                }
+            });
+
+            return ranks;
+        }
+
+        // Render league scores
+        function renderLeagueScores() {
+            const container = document.getElementById('leagueScores');
+
+            // Sort weeks in descending order (most recent first)
+            const sortedWeeks = [...LEAGUE_DATA].sort((a, b) => b.week - a.week);
+
+            let html = '';
+
+            sortedWeeks.forEach(weekData => {
+                const scores = getScoresForMode(weekData, leagueViewMode);
+                const gm1Ranks = calculateRanks(scores, 'gm1');
+                const gm2Ranks = calculateRanks(scores, 'gm2');
+                const gm3Ranks = calculateRanks(scores, 'gm3');
+                const seriesRanks = calculateRanks(scores, 'series');
+
+                html += `
+                    <div class="league-week">
+                        <div class="league-week-header">
+                            <span>Week ${weekData.week} - ${weekData.date}</span>
+                            <span>vs ${weekData.opponent}</span>
+                        </div>
+                        <table class="league-table">
+                            <thead>
+                                <tr>
+                                    <th>Player</th>
+                                    <th>Game 1</th>
+                                    <th>Game 2</th>
+                                    <th>Game 3</th>
+                                    <th>Series</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+
+                PLAYERS.forEach(player => {
+                    const pScores = scores[player];
+                    html += `<tr>
+                        <td style="font-weight: bold; color: #B8860B;">${player}</td>
+                        <td class="score-cell rank-${getRankClass(gm1Ranks[player])}">${formatScore(pScores.gm1, gm1Ranks[player])}</td>
+                        <td class="score-cell rank-${getRankClass(gm2Ranks[player])}">${formatScore(pScores.gm2, gm2Ranks[player])}</td>
+                        <td class="score-cell rank-${getRankClass(gm3Ranks[player])}">${formatScore(pScores.gm3, gm3Ranks[player])}</td>
+                        <td class="score-cell rank-${getRankClass(seriesRanks[player])}" style="font-weight: bold;">${formatScore(pScores.series, seriesRanks[player])}</td>
+                    </tr>`;
+                });
+
+                html += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function getRankClass(rank) {
+            if (rank === null) return '';
+            if (rank === 1) return '1st';
+            if (rank === 2) return '2nd';
+            if (rank === 3) return '3rd';
+            return '4th';
+        }
+
+        function formatScore(score, rank) {
+            if (score === null) return '<span style="color: #999;">—</span>';
+            const badge = rank ? `<span class="rank-badge r${rank}">${rank}</span>` : '';
+            return `${score}${badge}`;
+        }
+
+        // Sub-tab switching for league scores
+        document.querySelectorAll('.sub-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                leagueViewMode = this.dataset.subtab;
+                renderLeagueScores();
+            });
+        });
+
+        // Render league scores on load
+        renderLeagueScores();
+
+        // Calculate leaderboard stats
+        function calculateLeaderboardStats(mode) {
+            const stats = {
+                games: {},
+                series: {}
+            };
+
+            // Initialize stats for each player
+            PLAYERS.forEach(player => {
+                stats.games[player] = { 1: 0, 2: 0, 3: 0, 4: 0 };
+                stats.series[player] = { 1: 0, 2: 0, 3: 0, 4: 0 };
+            });
+
+            // Go through each week
+            LEAGUE_DATA.forEach(weekData => {
+                const scores = getScoresForMode(weekData, mode);
+
+                // Calculate ranks for each game
+                ['gm1', 'gm2', 'gm3'].forEach(game => {
+                    const ranks = calculateRanks(scores, game);
+                    PLAYERS.forEach(player => {
+                        if (ranks[player] !== null && ranks[player] >= 1 && ranks[player] <= 4) {
+                            stats.games[player][ranks[player]]++;
+                        }
+                    });
+                });
+
+                // Calculate ranks for series
+                const seriesRanks = calculateRanks(scores, 'series');
+                PLAYERS.forEach(player => {
+                    if (seriesRanks[player] !== null && seriesRanks[player] >= 1 && seriesRanks[player] <= 4) {
+                        stats.series[player][seriesRanks[player]]++;
+                    }
+                });
+            });
+
+            return stats;
+        }
+
+        // Calculate points for a player: 1st=4, 2nd=3, 3rd=2, 4th=1
+        function calculatePoints(playerStats) {
+            return (playerStats[1] * 4) + (playerStats[2] * 3) + (playerStats[3] * 2) + (playerStats[4] * 1);
+        }
+
+        // Render a single leaderboard table
+        function renderLeaderboardTable(containerId, stats) {
+            const container = document.getElementById(containerId);
+
+            // Sort players by total points (descending)
+            const sortedPlayers = [...PLAYERS].sort((a, b) => {
+                return calculatePoints(stats[b]) - calculatePoints(stats[a]);
+            });
+
+            let html = `
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Player</th>
+                            <th>1st</th>
+                            <th>2nd</th>
+                            <th>3rd</th>
+                            <th>4th</th>
+                            <th>Pts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            sortedPlayers.forEach(player => {
+                const points = calculatePoints(stats[player]);
+                html += `
+                    <tr>
+                        <td>${player}</td>
+                        <td class="count-1st">${stats[player][1]}</td>
+                        <td class="count-2nd">${stats[player][2]}</td>
+                        <td class="count-3rd">${stats[player][3]}</td>
+                        <td class="count-4th">${stats[player][4]}</td>
+                        <td class="points-col">${points}</td>
+                    </tr>
+                `;
+            });
+
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        // Render all leaderboards
+        function renderLeaderboards() {
+            const scratchStats = calculateLeaderboardStats('scratch');
+            const handicapStats = calculateLeaderboardStats('handicap');
+
+            renderLeaderboardTable('scratchGamesLeaderboard', scratchStats.games);
+            renderLeaderboardTable('scratchSeriesLeaderboard', scratchStats.series);
+            renderLeaderboardTable('handicapGamesLeaderboard', handicapStats.games);
+            renderLeaderboardTable('handicapSeriesLeaderboard', handicapStats.series);
+        }
+
+        // Render leaderboards on load
+        renderLeaderboards();
+
+        // Calculate side bet leaderboard stats from Firebase data
+        function calculateSideBetLeaderboardStats(data) {
+            const stats = {};
+
+            // Initialize stats for each player
+            PLAYERS.forEach(player => {
+                stats[player] = { gameWins: 0, seriesWins: 0, money: 0 };
+            });
+
+            // Group games by date
+            const gamesByDate = {};
+            data.games.forEach(game => {
+                if (!gamesByDate[game.date]) {
+                    gamesByDate[game.date] = [];
+                }
+                gamesByDate[game.date].push(game);
+            });
+
+            // Process each game for wins
+            data.games.forEach(game => {
+                const scores = game.scores;
+                const maxScore = Math.max(...PLAYERS.map(p => scores[p]));
+                const winners = PLAYERS.filter(p => scores[p] === maxScore);
+
+                // Count game wins (including shared wins for ties)
+                winners.forEach(player => {
+                    stats[player].gameWins++;
+                });
+
+                // Add game money
+                const payouts = calculateGameWinnings(scores);
+                PLAYERS.forEach(player => {
+                    stats[player].money += payouts[player];
+                });
+            });
+
+            // Process series (only for complete dates with 3 games)
+            Object.keys(gamesByDate).forEach(date => {
+                const dateGames = gamesByDate[date];
+                if (dateGames.length === 3) {
+                    // Calculate series totals
+                    const seriesTotals = {};
+                    PLAYERS.forEach(p => seriesTotals[p] = 0);
+                    dateGames.forEach(game => {
+                        PLAYERS.forEach(p => {
+                            seriesTotals[p] += game.scores[p];
+                        });
+                    });
+
+                    // Find series winners
+                    const maxTotal = Math.max(...PLAYERS.map(p => seriesTotals[p]));
+                    const seriesWinners = PLAYERS.filter(p => seriesTotals[p] === maxTotal);
+
+                    // Count series wins
+                    seriesWinners.forEach(player => {
+                        stats[player].seriesWins++;
+                    });
+
+                    // Add series money
+                    const seriesPayouts = calculateGameWinnings(seriesTotals);
+                    PLAYERS.forEach(player => {
+                        stats[player].money += seriesPayouts[player];
+                    });
+                }
+            });
+
+            return stats;
+        }
+
+        // Render side bet leaderboards (called after Firebase data loads)
+        function renderSideBetLeaderboards() {
+            const container = document.getElementById('sideBetLeaderboard');
+
+            if (currentData.games.length === 0) {
+                container.innerHTML = '<p class="no-data">No games recorded yet.</p>';
+                return;
+            }
+
+            const stats = calculateSideBetLeaderboardStats(currentData);
+
+            // Sort players by money (descending)
+            const sortedPlayers = [...PLAYERS].sort((a, b) => {
+                return stats[b].money - stats[a].money;
+            });
+
+            let html = `
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Player</th>
+                            <th>Game Wins</th>
+                            <th>Series Wins</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            sortedPlayers.forEach(player => {
+                const money = stats[player].money;
+                const moneyClass = money > 0 ? 'positive' : money < 0 ? 'negative' : 'zero';
+                const moneySign = money > 0 ? '+' : '';
+                html += `
+                    <tr>
+                        <td>${player}</td>
+                        <td class="count-1st">${stats[player].gameWins}</td>
+                        <td class="count-1st">${stats[player].seriesWins}</td>
+                        <td class="money-col ${moneyClass}">${moneySign}$${money.toFixed(0)}</td>
+                    </tr>
+                `;
+            });
+
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
 
         // Start real-time listener
         setupRealtimeListener();
