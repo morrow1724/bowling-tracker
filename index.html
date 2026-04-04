@@ -2476,8 +2476,7 @@
                 const aM=pt.match(/Average\s*\n+\s*(\d+)/i); if(aM) average=parseInt(aM[1]);
                 const insights={strikeRate:xpct(pt,'Strikes'),spareRate:xpct(pt,'Spares'),splitRate:xpct(pt,'Splits'),pocketHitRate:xpct(pt,'Pocket hits'),carryRate:xpct(pt,'Carry'),firstBallAvg:xnum(pt,'First ball average')};
                 const games=parseLTGames(html);
-                // Parse pin leave entries: pattern is "N Time(s)\nPCT %"
-                const pinLeaves = parsePinLeaves(pt, games);
+                const pinLeaves = parsePinLeaves(html);
                 if(!player||!dateStr) return null;
                 return{player,center,date:dateStr,url,total,average,insights,games,pinLeaves};
             }catch(e){console.error(e);return null;}
@@ -2485,66 +2484,38 @@
         function xpct(t,l){const m=t.match(new RegExp(l+'[\\s\\S]{0,300}?(\\d+)%','i'));return m?parseInt(m[1]):null;}
         function xnum(t,l){const m=t.match(new RegExp(l+'[\\s\\S]{0,300}?(\\d+\\.?\\d*)','i'));return m?parseFloat(m[1]):null;}
 
-        function parsePinLeaves(plainText, games) {
-            // Extract "N Time(s)\nPCT %" pairs after "Pin leaves" section
-            const pinSection = plainText.split(/Pin leaves/i)[1] || '';
-            const entries = [];
-            const pattern = /(\d+)\s+Times?\s*[\n\r]+\s*(\d+)\s*%/gi;
-            let m;
-            while ((m = pattern.exec(pinSection)) !== null && entries.length < 20) {
-                entries.push({ count: parseInt(m[1]), pct: parseInt(m[2]) });
-            }
-            // Derive pin leave patterns from frame data
-            const leaves = deriveLeavePatterns(games);
-            // Merge counts/pcts with derived pin patterns
-            return entries.map((e, i) => ({
-                count: e.count,
-                pct: e.pct,
-                pins: leaves[i] || null  // array of pin numbers left standing (1-10), null if unknown
-            }));
-        }
-
-        function deriveLeavePatterns(games) {
-            // Go through each frame, collect non-strike first balls
-            // and determine which pins were left
-            const leaves = [];
-            (games || []).forEach(game => {
-                (game.frames || []).forEach(fr => {
-                    if (!fr.throws || fr.throws[0] === 'X') return; // strike = no leave
-                    const first = fr.throws[0];
-                    const knocked = first === '-' ? 0 : (parseInt(first) || 0);
-                    const left = 10 - knocked;
-                    // Use common leave patterns based on pins left
-                    leaves.push(getTypicalLeave(left, fr.frame));
-                });
+        function parsePinLeaves(html) {
+            // Parse pin leave boxes directly from HTML using pinLeaves-pin-white classes
+            const cleanHtml = html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
+            const pinSection = cleanHtml.match(/id="pinLeaves"([\s\S]*?)(?=<section|<\/body>)/i);
+            if (!pinSection) return [];
+            const boxes = pinSection[1].split('class="pins-leaves-box">').slice(1);
+            return boxes.map(box => {
+                const countM = box.match(/(\d+)\s*Times?/i);
+                const pctM   = box.match(/<h1[^>]*>(\d+)\s*%/);
+                return {
+                    count: countM ? parseInt(countM[1]) : 0,
+                    pct:   pctM   ? parseInt(pctM[1])   : 0,
+                    pins:  parsePinStates(box, 'pinLeaves-pin').standing
+                };
             });
-            return leaves;
-        }
-
-        function getTypicalLeave(pinsLeft, frameNum) {
-            // Returns array of pin numbers remaining using common patterns
-            // Standard pin positions: 1=headpin, 2,3=second row, 4,5,6=third, 7,8,9,10=back
-            const layouts = {
-                0: [],
-                1: [7],         // single pin, usually 7
-                2: [7,10],      // 7-10 split (most dramatic 2-pin)
-                3: [7,8,10],
-                4: [6,7,9,10],
-                5: [5,6,7,9,10],
-                6: [4,6,7,9,10],
-                7: [3,4,6,7,9,10],
-                8: [2,3,4,6,7,9,10],
-                9: [2,3,4,5,6,7,9,10],
-            };
-            return layouts[Math.min(pinsLeft, 9)] || [];
         }
 
         function parseLTGames(html) {
-            const games=[], text=html.replace(/<[^>]+>/g,'\n');
+            const games=[];
+            // Strip style blocks for HTML-based pin parsing
+            const cleanHtml=html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'');
+            // Split clean HTML into per-game sections by "Game N" title spans
+            const gameHtmlSections=cleanHtml.split(/title-headlines[^>]*>\s*Game\s+\d/);
+            // Text-based approach for throws/scores (existing logic)
+            const text=html.replace(/<[^>]+>/g,'\n');
             const blocks=('\n'+text).split(/\nGame\s+(\d)\s*\n/);
             for(let bi=1;bi<blocks.length-1;bi+=2){
                 const gameNum=parseInt(blocks[bi]), block=blocks[bi+1]||'';
                 const tokens=block.split(/\n/).map(t=>t.trim()).filter(Boolean);
+                // Per-game HTML section for pin parsing (index 1,2,3 = game 1,2,3)
+                const gameHtml=gameHtmlSections[gameNum]||'';
+                const frameHtmlParts=gameHtml.split('class="frame">').slice(1);
                 const frames=[]; let prevRun=0, j=0;
                 while(j<tokens.length&&frames.length<10){
                     const fn=parseInt(tokens[j]);
@@ -2564,7 +2535,11 @@
                         } else if(t==='X'||t==='/'||t==='-'||t.length===1){throws.push(t);j++;}
                         else break;
                     }
-                    frames.push({frame:fn,throws,ball1:throws[0]||'',ball2:throws[1]||null,running});
+                    // Extract pin states from this frame's HTML
+                    const frameHtml=frameHtmlParts[frames.length]||'';
+                    const pinsM=frameHtml.match(/class="pins">([\s\S]*?)class="throws"/);
+                    const pinStates=pinsM?parsePinStates(pinsM[1],'fullGames-pin'):{standing:[],second:[]};
+                    frames.push({frame:fn,throws,ball1:throws[0]||'',ball2:throws[1]||null,running,standingPins:pinStates.standing,secondBallPins:pinStates.second});
                 }
                 games.push({gameNumber:gameNum,total:frames.length?(frames[frames.length-1].running||0):0,frames});
             }
@@ -2589,7 +2564,8 @@
                     const framesHtml=(game.frames||[]).map(fr=>{
                         const bl=ov?getBallLabel(ov,fr.frame):'';
                         const throwsHtml=(fr.throws||[]).map(t=>`<span class="${t==='X'?'lt-strike':t==='/'?'lt-spare':''}">${escHtml(t)}</span>`).join(' ');
-                        return `<td>${throwsHtml}<br><small style="color:#aaa;">${fr.running!=null?fr.running:''}</small>${bl?`<div class="lt-frame-ball">${escHtml(bl)}</div>`:''}`;
+                        const pinDiag=fr.standingPins!=null?`<div style="display:flex;justify-content:center;">${pinDiagramSVG(fr.standingPins,44,40,fr.secondBallPins||[])}</div>`:'';
+                        return `<td style="text-align:center;padding:3px 2px;">${pinDiag}${throwsHtml}<br><small style="color:#aaa;">${fr.running!=null?fr.running:''}</small>${bl?`<div class="lt-frame-ball">${escHtml(bl)}</div>`:''}`;
                     }).join('');
                     const existOv=s.ballUsageOverride&&s.ballUsageOverride[game.gameNumber]||{};
                     const selB1=existOv.ball1Id?`<option value="${existOv.ball1Id}" selected>${escHtml(existOv.ball1Name||'')}</option>`:'';
@@ -2611,6 +2587,20 @@
                         <tbody><tr><td style="font-weight:bold;color:#B8860B;">Throws</td>${framesHtml}</tr></tbody></table></div>
                         ${assignHtml}</div>`;
                 }).join('');
+                // Pin leaves section
+                const pinLeaves=s.pinLeaves||[];
+                const pinLeavesHtml=pinLeaves.length?`<div style="margin-top:16px;">
+                    <div style="font-size:14px;font-weight:bold;color:#B8860B;margin-bottom:10px;padding-bottom:4px;border-bottom:1px solid #444;">Pin Leaves</div>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;">
+                    ${pinLeaves.map(leaf=>{
+                        const col=leaf.pct===100?'#4caf50':leaf.pct===0?'#f44336':'#ffd600';
+                        return `<div style="background:#2a2a2a;border-radius:6px;padding:6px;text-align:center;">
+                            <div style="font-size:10px;color:#aaa;margin-bottom:4px;">${leaf.count} Time${leaf.count!==1?'s':''}</div>
+                            <div style="display:flex;justify-content:center;">${pinDiagramSVG(leaf.pins,60,55)}</div>
+                            <div style="font-size:13px;font-weight:bold;color:${col};">${leaf.pct}%</div>
+                        </div>`;
+                    }).join('')}
+                    </div></div>`:'';
                 return `<div style="border:1px solid #ddd;border-radius:8px;margin-bottom:20px;overflow:hidden;">
                     <div style="background:#333;color:#B8860B;padding:12px 15px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
                         <div><strong>${escHtml(s.player)} — ${s.total} Series</strong><div style="font-size:12px;color:#aaa;">${escHtml(s.center||'')} · ${s.date||''}</div></div>
@@ -2632,6 +2622,7 @@
                         </div>
                         ${insightsHtml}
                         ${gamesHtml}
+                        ${pinLeavesHtml}
                     </div>
                 </div>`;
             }).join('');
@@ -2676,13 +2667,10 @@
         // ── SVG pin diagram ───────────────────────────────────────────────
         // pins: array of pin numbers (1-10) that are STILL STANDING (light)
         // all others are knocked down (dark)
-        function pinDiagramSVG(standingPins) {
+        // 3-state pin diagram: dark=first ball, white=still standing, outline=second ball
+        function pinDiagramSVG(standingPins, w=80, h=74, secondBallPins=[]) {
             const standing = new Set(standingPins || []);
-            // Pin positions in a 100x90 viewBox — triangle pointing down toward bowler
-            // Row 1 (back, farthest): 7,8,9,10
-            // Row 2: 4,5,6
-            // Row 3: 2,3
-            // Row 4 (front, closest): 1
+            const second   = new Set(secondBallPins || []);
             const pos = {
                 7:  [14, 18],  8:  [38, 18],  9:  [62, 18],  10: [86, 18],
                 4:  [26, 38],  5:  [50, 38],  6:  [74, 38],
@@ -2690,12 +2678,33 @@
                 1:  [50, 76]
             };
             const pins = Object.entries(pos).map(([num, [cx, cy]]) => {
-                const isStanding = standing.has(parseInt(num));
-                const fill   = isStanding ? '#e0e0e0' : '#2a2a2a';
-                const stroke = isStanding ? '#fff' : '#444';
+                const p = parseInt(num);
+                let fill, stroke;
+                if (standing.has(p))     { fill = '#e0e0e0'; stroke = '#fff'; }
+                else if (second.has(p))  { fill = 'none';    stroke = '#aaa'; }
+                else                     { fill = '#2a2a2a'; stroke = '#444'; }
                 return `<circle cx="${cx}" cy="${cy}" r="10" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
             }).join('');
-            return `<svg viewBox="0 0 100 92" width="80" height="74" xmlns="http://www.w3.org/2000/svg">${pins}</svg>`;
+            return `<svg viewBox="0 0 100 92" width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg">${pins}</svg>`;
+        }
+
+        // Parse pin states from an HTML segment.
+        // Returns { standing: [...], second: [...] }
+        // standing = still up (white), second = knocked by 2nd ball (oval/outline)
+        // Pin layout (row order L→R): [7,8,9,10], [4,5,6], [2,3], [1]
+        function parsePinStates(htmlSegment, pinClass) {
+            const PIN_LAYOUT = [7, 8, 9, 10, 4, 5, 6, 2, 3, 1];
+            const pinRegex = new RegExp(`class="${pinClass}([^"]*)"`, 'g');
+            const standing = [], second = [];
+            let match, i = 0;
+            while ((match = pinRegex.exec(htmlSegment)) !== null) {
+                if (i >= 10) break;
+                const cls = match[1];
+                if (cls.includes('-white')) standing.push(PIN_LAYOUT[i]);
+                else if (cls.includes('-oval')) second.push(PIN_LAYOUT[i]);
+                i++;
+            }
+            return { standing, second };
         }
 
         // ── Donut chart (Canvas-based) ────────────────────────────────────
@@ -2788,7 +2797,11 @@
                     const throwsHtml = (fr.throws || []).map(t =>
                         `<span class="${t==='X'?'lt-strike':t==='/'?'lt-spare':''}">${escHtml(t)}</span>`
                     ).join(' ');
-                    return `<td style="min-width:38px;text-align:center;padding:5px 4px;">
+                    const pinDiag = fr.standingPins != null
+                        ? `<div style="display:flex;justify-content:center;margin-bottom:2px;">${pinDiagramSVG(fr.standingPins,52,48,fr.secondBallPins||[])}</div>`
+                        : '';
+                    return `<td style="min-width:52px;text-align:center;padding:4px 3px;">
+                        ${pinDiag}
                         <div>${throwsHtml}</div>
                         <div style="font-size:11px;color:#aaa;">${fr.running != null ? fr.running : ''}</div>
                         ${bl ? `<div class="lt-frame-ball">${escHtml(bl)}</div>` : ''}
