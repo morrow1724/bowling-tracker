@@ -592,6 +592,48 @@
         #playerChart {
             height: 100% !important;
         }
+
+        /* ── Arsenal ── */
+        .arsenal-player-section { margin-bottom: 28px; }
+        .arsenal-player-header { display:flex; justify-content:space-between; align-items:center; padding:12px 15px; background:#333; border-radius:8px 8px 0 0; color:#B8860B; font-weight:bold; font-size:16px; }
+        .arsenal-player-body { border:1px solid #ddd; border-top:none; border-radius:0 0 8px 8px; padding:15px; }
+        .arsenal-add-form { display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap; margin-top:14px; padding-top:14px; border-top:1px dashed #eee; }
+        .ball-list { display:flex; flex-direction:column; gap:8px; }
+        .ball-item { display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:#f9f9f9; border-radius:6px; border:1px solid #eee; flex-wrap:wrap; gap:8px; }
+        .ball-stats { display:flex; gap:16px; align-items:center; background:#fff; border:1px solid #eee; border-radius:6px; padding:8px 14px; }
+        .ball-stat { text-align:center; }
+        .ball-stat-value { font-size:18px; font-weight:bold; color:#B8860B; }
+        .ball-stat-label { font-size:11px; color:#888; text-transform:uppercase; letter-spacing:0.5px; }
+        .btn-sm { padding:6px 12px; font-size:13px; }
+        .btn-warn { background:#e67e00; } .btn-warn:hover { background:#c46a00; }
+        /* ── LaneTalk ── */
+        .lt-stat-box { text-align:center; background:#fef8e7; border:1px solid #B8860B; border-radius:6px; padding:10px 16px; min-width:70px; }
+        .lt-sv { font-size:22px; font-weight:bold; color:#B8860B; }
+        .lt-sl { font-size:11px; color:#888; text-transform:uppercase; }
+        .lt-insights { display:grid; grid-template-columns:repeat(auto-fit,minmax(110px,1fr)); gap:10px; margin-bottom:16px; }
+        .lt-insight-item { background:#f5f5f5; border-radius:6px; padding:10px; text-align:center; }
+        .lt-insight-item .lt-iv { font-size:20px; font-weight:bold; color:#333; }
+        .lt-insight-item .lt-il { font-size:11px; color:#888; }
+        .lt-game-block { border:1px solid #eee; border-radius:6px; overflow:hidden; margin-bottom:12px; }
+        .lt-game-title { background:#555; color:#fff; padding:8px 12px; font-weight:bold; font-size:13px; display:flex; justify-content:space-between; }
+        .lt-scorecard { overflow-x:auto; }
+        .lt-scorecard table { margin:0; font-size:13px; }
+        .lt-scorecard th { background:#444; color:#ddd; padding:6px 8px; font-size:11px; }
+        .lt-scorecard td { padding:6px 8px; min-width:36px; text-align:center; }
+        .lt-frame-ball { font-size:10px; color:#B8860B; font-style:italic; margin-top:2px; }
+        .lt-strike { color:#2e7d32; font-weight:bold; }
+        .lt-spare  { color:#1565c0; font-weight:bold; }
+        .lt-ball-row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; padding:10px 14px; background:#444; border-top:1px solid #555; }
+        .lt-ball-row label { font-size:13px; font-weight:600; color:#ccc; }
+        /* ── History enhancements ── */
+        .lt-badge { display:inline-block; background:#e3f2fd; color:#1565c0; border:1px solid #90caf9; border-radius:10px; padding:2px 8px; font-size:11px; cursor:pointer; }
+        .lt-badge:hover { background:#bbdefb; }
+        .push-league-form { margin-top:10px; padding:12px 14px; background:#f0f7ff; border:1px solid #90caf9; border-radius:6px; }
+        .push-league-form label { font-size:13px; font-weight:600; color:#555; }
+        .push-league-form input[type="text"] { padding:7px 10px; border:1px solid #ccc; border-radius:4px; font-size:14px; }
+        .push-league-btn { background:#1565c0; font-size:14px; padding:8px 16px; }
+        .push-league-btn:hover { background:#0d47a1; }
+        .ball-tag-pill { display:inline-block; background:#B8860B22; color:#7a5900; border:1px solid #B8860B55; border-radius:10px; padding:1px 8px; font-size:11px; margin:2px; }
     </style>
 </head>
 <body>
@@ -620,6 +662,13 @@
                 <div class="tab" data-tab="league">Scores</div>
                 <div class="tab" data-tab="leaderboard">Leaderboard</div>
                 <div class="tab" data-tab="rawdata">Player Stats</div>
+            </div>
+        </div>
+        <div class="tab-group">
+            <div class="tab-group-label">Equipment</div>
+            <div class="tabs">
+                <div class="tab" data-tab="arsenal">Arsenal</div>
+                <div class="tab" data-tab="lanetalk">LaneTalk</div>
             </div>
         </div>
     </div>
@@ -789,6 +838,43 @@
         </div>
     </div>
 
+    <!-- ARSENAL -->
+    <div id="arsenal" class="section">
+        <div class="card">
+            <h2>&#127923; Arsenal Manager</h2>
+            <p class="subtitle" style="margin-top:0;">Each player's bag. Frame &amp; game counters reset on maintenance.</p>
+            <div id="arsenalContent"><div class="loading">Loading...</div></div>
+        </div>
+    </div>
+
+    <!-- LANETALK -->
+    <div id="lanetalk" class="section">
+        <div class="card">
+            <h2>&#128279; LaneTalk Series</h2>
+            <p class="subtitle" style="margin-top:0;">Import a shared LaneTalk link. Associate it with a week to view frame-by-frame stats.</p>
+            <div class="lt-import-bar" style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;padding:14px;background:#f9f9f9;border-radius:8px;border:1px solid #eee;margin-bottom:20px;">
+                <div class="form-group" style="flex:1;">
+                    <label>LaneTalk Shared Link</label>
+                    <input type="text" id="ltUrl" placeholder="http://shared.lanetalk.com/..." style="width:100%;padding:10px;border:1px solid #ccc;border-radius:4px;font-size:15px;">
+                </div>
+                <button onclick="importLaneTalk()" id="ltImportBtn">Import Series</button>
+                <div id="ltImportStatus" style="font-size:13px;color:#666;padding:4px 0;"></div>
+            </div>
+            <div id="ltSeriesList"><div class="loading">Loading...</div></div>
+        </div>
+    </div>
+
+    <!-- LaneTalk Detail Modal -->
+    <div id="ltModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.55);z-index:1000;overflow-y:auto;padding:20px;">
+        <div style="background:#fff;max-width:900px;margin:20px auto;border-radius:10px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+            <div style="background:#333;color:#B8860B;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;">
+                <div><div id="ltModalTitle" style="font-size:18px;font-weight:bold;"></div><div id="ltModalMeta" style="font-size:13px;color:#aaa;margin-top:2px;"></div></div>
+                <button onclick="closeLTModal()" style="background:#555;font-size:18px;padding:4px 12px;line-height:1;">&#10005;</button>
+            </div>
+            <div id="ltModalBody" style="padding:20px;background:#2d2d2d;color:#fff;"></div>
+        </div>
+    </div>
+
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -800,12 +886,12 @@
     <script>
         // Firebase configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyAmw5r5WxdNqgEoFBAAtVH6_u4AY4aNuf4",
-            authDomain: "bowling-tracker-422ae.firebaseapp.com",
-            projectId: "bowling-tracker-422ae",
-            storageBucket: "bowling-tracker-422ae.firebasestorage.app",
-            messagingSenderId: "615292433054",
-            appId: "1:615292433054:web:1840866499248469ef818f"
+            apiKey: "AIzaSyDw_aBhVhDx9CUYV_ZRP7kWOAlWXpZiNpM",
+            authDomain: "bowlingappmattbranch.firebaseapp.com",
+            projectId: "bowlingappmattbranch",
+            storageBucket: "bowlingappmattbranch.firebasestorage.app",
+            messagingSenderId: "1025230938263",
+            appId: "1:1025230938263:web:cb275ebfa52c5f035cc9d2"
         };
 
         // Initialize Firebase
@@ -813,11 +899,37 @@
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        const PLAYERS = ['Nick', 'Kevin', 'Cub', 'Matt'];
+        const PLAYERS   = ['Nick', 'Kevin', 'Cub', 'Matt'];
         const BET_AMOUNT = 2;
 
+        // Parse any date format (YYYY-MM-DD or M/D/YYYY) to a timestamp
+        function parseDateMs(d) {
+            if (!d) return 0;
+            if (d.includes('/')) {
+                const [m, day, y] = d.split('/');
+                return new Date(parseInt(y), parseInt(m) - 1, parseInt(day)).getTime();
+            }
+            const [y, m, day] = d.split('-');
+            return new Date(parseInt(y), parseInt(m) - 1, parseInt(day)).getTime();
+        }
+
+        // Only games from 2/25/2026 onward count toward cash balances
+        const CASH_CUTOFF_MS = new Date(2026, 1, 24, 23, 59, 59).getTime(); // end of Feb 24 2026
+        function countsForCash(game) {
+            return parseDateMs(game.date) > CASH_CUTOFF_MS;
+        }
+
+        // Get the scores used for bet calculations — handicap scores when available
+        function getBetScores(game) {
+            if (game.handicapScores) return game.handicapScores;
+            return game.scores; // fallback for old data already stored as combined
+        }
+
         // Current data (updated by real-time listener)
-        let currentData = { games: [] };
+        let currentData  = { games: [] };
+        let arsenalData  = {};  // player -> { balls:[] }
+        let ltSeriesData = [];  // imported LaneTalk series
+        let playerChart  = null;
 
         // Initialize
         document.getElementById('gameDate').valueAsDate = new Date();
@@ -829,47 +941,80 @@
             document.getElementById('syncStatus').className = 'sync-status disconnected';
         });
 
+        function escHtml(s) { if(!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+        function getArsenalBalls(player) { return (arsenalData[player]&&arsenalData[player].balls)?arsenalData[player].balls:[]; }
+        const HANDICAP_DEFAULTS = { Nick: 88, Kevin: 43, Cub: 59, Matt: 44 };
+        function getHandicapForEntry(player, gameNum, date) {
+            if (gameNum >= 2 && date) {
+                const g1 = currentData.games.find(g => g.date === date && g.gameNumber === 1);
+                if (g1 && g1.handicaps && g1.handicaps[player] != null) return g1.handicaps[player];
+            }
+            // Game 1 (or fallback): use handicap from game 3 of the most recent series
+            const sorted = [...currentData.games]
+                .filter(g => g.gameNumber === 3 && g.handicaps && g.handicaps[player] != null)
+                .sort((a,b) => b.date.localeCompare(a.date));
+            if (sorted.length) return sorted[0].handicaps[player];
+            return HANDICAP_DEFAULTS[player] ?? '';
+        }
+        function toggleSwitchFrame(player) {
+            const b2=document.getElementById(`ball2_${player}`), sfg=document.getElementById(`sfGroup_${player}`);
+            if(sfg) sfg.style.display=(b2&&b2.value)?'flex':'none';
+        }
+
         // Generate player input rows
         function generatePlayerInputs() {
             const container = document.getElementById('playerInputs');
-            container.innerHTML = PLAYERS.map(player => `
-                <div class="player-row">
-                    <div class="player-name">${player}</div>
-                    <div class="score-inputs">
-                        <div class="form-group">
-                            <label>Score</label>
-                            <input type="number" id="score_${player}" min="0" max="300" required placeholder="0">
+            if (!container) return;
+            container.innerHTML = PLAYERS.map(player => {
+                const balls=getArsenalBalls(player), hasBalls=balls.length>0;
+                const ballOpts=balls.map(b=>`<option value="${b.id}">${escHtml(b.name)}</option>`).join('');
+                const curGameNum=parseInt(document.getElementById('gameNumber')?.value)||1;
+                const curDate=document.getElementById('gameDate')?.value||'';
+                const lastHdcp=getHandicapForEntry(player,curGameNum,curDate);
+                const ballSection = hasBalls ? `
+                    <div style="margin-top:8px;padding-top:8px;border-top:1px dashed #ddd;">
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                            <div class="form-group"><label style="font-size:12px;color:#777;">Ball 1</label>
+                                <select id="ball1_${player}" style="font-size:14px;padding:7px;"><option value="">-- none --</option>${ballOpts}</select></div>
+                            <div class="form-group"><label style="font-size:12px;color:#777;">Ball 2</label>
+                                <select id="ball2_${player}" style="font-size:14px;padding:7px;" onchange="toggleSwitchFrame('${player}')"><option value="">-- none --</option>${ballOpts}</select></div>
+                            <div class="form-group" id="sfGroup_${player}" style="display:none;"><label style="font-size:12px;color:#777;">Switch Frame</label>
+                                <select id="switchFrame_${player}" style="font-size:14px;padding:7px;">${[...Array(10)].map((_,i)=>`<option value="${i+1}">${i+1}</option>`).join('')}</select></div>
                         </div>
-                        <div class="form-group">
-                            <label>Handicap</label>
-                            <input type="number" id="handicap_${player}" min="0" max="100" required placeholder="0">
+                    </div>` : '';
+                return `
+                <div class="player-row" style="align-items:flex-start;">
+                    <div class="player-name" style="padding-top:8px;">${player}</div>
+                    <div style="flex:1;">
+                        <div class="score-inputs">
+                            <div class="form-group"><label>Score</label><input type="number" id="score_${player}" min="0" max="300" required placeholder="0"></div>
+                            <div class="form-group"><label>Handicap</label><input type="number" id="handicap_${player}" min="0" max="200" placeholder="0" value="${lastHdcp}"></div>
+                            <div class="total-display" id="total_${player}">= ${lastHdcp||0}</div>
                         </div>
-                        <div class="total-display" id="total_${player}">= 0</div>
+                        ${ballSection}
                     </div>
-                </div>
-            `).join('');
-
-            // Add listeners to update totals
+                </div>`;
+            }).join('');
             PLAYERS.forEach(player => {
-                const scoreInput = document.getElementById(`score_${player}`);
-                const handicapInput = document.getElementById(`handicap_${player}`);
-
-                const updateTotal = () => {
-                    const score = parseInt(scoreInput.value) || 0;
-                    const handicap = parseInt(handicapInput.value) || 0;
-                    document.getElementById(`total_${player}`).textContent = `= ${score + handicap}`;
-                };
-
-                scoreInput.addEventListener('input', updateTotal);
-                handicapInput.addEventListener('input', updateTotal);
+                const s=document.getElementById(`score_${player}`), h=document.getElementById(`handicap_${player}`);
+                const upd=()=>{ document.getElementById(`total_${player}`).textContent=`= ${(parseInt(s.value)||0)+(parseInt(h.value)||0)}`; };
+                s.addEventListener('input',upd); h.addEventListener('input',upd); upd();
             });
         }
 
         generatePlayerInputs();
+        document.getElementById('gameNumber')?.addEventListener('change', generatePlayerInputs);
+        document.getElementById('gameDate')?.addEventListener('change', generatePlayerInputs);
 
         // Set up real-time listener for games
         function setupRealtimeListener() {
             const statusEl = document.getElementById('syncStatus');
+
+            // Also listen to leagueWeeks collection
+            db.collection('leagueWeeks').onSnapshot(snap => {
+                currentData.leagueWeeks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderHistory();
+            });
 
             db.collection('games').orderBy('date', 'desc').onSnapshot(
                 (snapshot) => {
@@ -880,7 +1025,9 @@
                         id: doc.id,
                         ...doc.data()
                     }));
+                    currentData.leagueWeeks = currentData.leagueWeeks || [];
 
+                    generatePlayerInputs();
                     renderBalances();
                     renderHistory();
                     renderSideBetLeaderboards();
@@ -963,7 +1110,7 @@
 
             dateGames.forEach(game => {
                 PLAYERS.forEach(p => {
-                    totals[p] += game.scores[p];
+                    totals[p] += getBetScores(game)[p] || 0;
                 });
             });
 
@@ -975,12 +1122,13 @@
             const balances = {};
             PLAYERS.forEach(p => balances[p] = 0);
 
-            // Track which dates have had series totals calculated
             const seriesDates = new Set();
 
             data.games.forEach(game => {
+                if (!countsForCash(game)) return;
+
                 // Individual game winnings
-                const gamePayouts = calculateGameWinnings(game.scores);
+                const gamePayouts = calculateGameWinnings(getBetScores(game));
                 PLAYERS.forEach(p => balances[p] += gamePayouts[p]);
 
                 // Check for series total (only once per complete date)
@@ -1033,14 +1181,14 @@
                 gamesByDate[game.date].push(game);
             });
 
-            // Sort dates descending
-            const sortedDates = Object.keys(gamesByDate).sort().reverse();
+            // Sort dates descending — most recent first, handles both date formats
+            const sortedDates = Object.keys(gamesByDate).sort((a, b) => parseDateMs(b) - parseDateMs(a));
 
             let html = '';
             sortedDates.forEach(date => {
                 const dateGames = gamesByDate[date].sort((a, b) => a.gameNumber - b.gameNumber);
-                const formattedDate = new Date(date + 'T12:00:00').toLocaleDateString('en-US', {
-                    weekday: 'short', month: 'short', day: 'numeric'
+                const formattedDate = new Date(parseDateMs(date)).toLocaleDateString('en-US', {
+                    weekday: 'short', month: 'short', day: 'numeric', year: 'numeric'
                 });
 
                 html += `<h3>${formattedDate}</h3>`;
@@ -1049,13 +1197,17 @@
                 html += '<th>Winner(s)</th><th></th></tr></thead><tbody>';
 
                 dateGames.forEach(game => {
-                    const maxScore = Math.max(...PLAYERS.map(p => game.scores[p]));
-                    const winners = PLAYERS.filter(p => game.scores[p] === maxScore);
+                    const betScores = getBetScores(game);
+                    const maxScore = Math.max(...PLAYERS.map(p => betScores[p]));
+                    const winners = PLAYERS.filter(p => betScores[p] === maxScore);
 
                     html += `<tr><td>Game ${game.gameNumber}</td>`;
                     PLAYERS.forEach(p => {
-                        const isWinner = game.scores[p] === maxScore;
-                        html += `<td class="${isWinner ? 'winner' : ''}">${game.scores[p]}</td>`;
+                        const isWinner = betScores[p] === maxScore;
+                        const sc = game.scores ? game.scores[p] : betScores[p];
+                        const hc = game.handicaps ? (game.handicaps[p]||0) : 0;
+                        const display = game.handicapScores ? betScores[p] : betScores[p];
+                        html += `<td class="${isWinner ? 'winner' : ''}" title="Scratch:${sc} +Hdcp:${hc}">${betScores[p]}</td>`;
                     });
                     html += `<td>${winners.join(', ')}</td>`;
                     html += `<td><button class="danger delete-btn" onclick="deleteGame('${game.id}')">Delete</button></td>`;
@@ -1066,7 +1218,7 @@
                 if (dateGames.length === 3) {
                     const totals = {};
                     PLAYERS.forEach(p => totals[p] = 0);
-                    dateGames.forEach(g => PLAYERS.forEach(p => totals[p] += g.scores[p]));
+                    dateGames.forEach(g => PLAYERS.forEach(p => totals[p] += getBetScores(g)[p] || 0));
 
                     const maxTotal = Math.max(...PLAYERS.map(p => totals[p]));
                     const seriesWinners = PLAYERS.filter(p => totals[p] === maxTotal);
@@ -1086,13 +1238,63 @@
                 if (payoutSummary) {
                     html += `<div class="payout-summary"><strong>Day's Winnings:</strong> ${payoutSummary}</div>`;
                 }
+
+                // LaneTalk badge if series linked to this date
+                const ltLinked = ltSeriesData.filter(s => s.linkedDate === date);
+                if (ltLinked.length) {
+                    html += `<div style="margin-top:6px;">`;
+                    ltLinked.forEach(s => {
+                        html += `<span class="lt-badge" onclick="openLTModal('${s.id}')">&#127923; ${s.player} LaneTalk &#9656;</span> `;
+                    });
+                    html += `</div>`;
+                }
+
+                // Push to League Stats button — only shown when all 3 games recorded
+                // and not already pushed
+                if (dateGames.length === 3) {
+                    const leagueDataDates = new Set(LEAGUE_DATA.map(w => { const m=w.date.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/); return m?`${m[3]}-${m[1].padStart(2,'0')}-${m[2].padStart(2,'0')}`:w.date; }));
+                    const alreadyPushed = leagueDataDates.has(date) || (currentData.leagueWeeks && currentData.leagueWeeks.some(w => w.date === date));
+                    if (!alreadyPushed) {
+                        html += `
+                        <div class="push-league-form" id="pushForm_${date}">
+                            <div style="margin-bottom:8px;font-size:14px;font-weight:bold;color:#1565c0;">Push to League Stats</div>
+                            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;">
+                                <div class="form-group">
+                                    <label>Opponent</label>
+                                    <input type="text" id="opp_${date}" placeholder="e.g. Pin Pals">
+                                </div>
+                                <div class="form-group">
+                                    <label>Result</label>
+                                    <select id="res_${date}" style="padding:8px;border:1px solid #ccc;border-radius:4px;font-size:14px;">
+                                        <option value="">--</option>
+                                        <option value="W">Win</option>
+                                        <option value="L">Loss</option>
+                                        <option value="T">Tie</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Us</label>
+                                    <input type="number" id="us_${date}" min="0" max="7" style="width:60px;padding:8px;border:1px solid #ccc;border-radius:4px;font-size:14px;">
+                                </div>
+                                <div class="form-group">
+                                    <label>Them</label>
+                                    <input type="number" id="them_${date}" min="0" max="7" style="width:60px;padding:8px;border:1px solid #ccc;border-radius:4px;font-size:14px;">
+                                </div>
+                                <button class="push-league-btn" onclick="pushToLeague('${date}')">&#8593; Add to League Stats</button>
+                            </div>
+                        </div>`;
+                    } else {
+                        html += `<div style="margin-top:6px;font-size:12px;color:#4caf50;">&#10003; Added to League Stats</div>`;
+                    }
+                }
             });
 
             container.innerHTML = html;
         }
 
-        // Calculate payouts for a specific date
+        // Calculate payouts for a specific date (only for dates that count for cash)
         function calculateDatePayouts(data, date) {
+            if (parseDateMs(date) <= CASH_CUTOFF_MS) return null;
             const dateGames = getGamesForDate(data, date);
             if (dateGames.length === 0) return null;
 
@@ -1100,15 +1302,17 @@
             PLAYERS.forEach(p => dayBalances[p] = 0);
 
             dateGames.forEach(game => {
-                const payouts = calculateGameWinnings(game.scores);
+                const payouts = calculateGameWinnings(getBetScores(game));
                 PLAYERS.forEach(p => dayBalances[p] += payouts[p]);
             });
 
             // Add series total if complete
             if (dateGames.length === 3) {
                 const seriesTotal = calculateSeriesTotal(data, date);
-                const seriesPayouts = calculateGameWinnings(seriesTotal);
-                PLAYERS.forEach(p => dayBalances[p] += seriesPayouts[p]);
+                if (seriesTotal) {
+                    const seriesPayouts = calculateGameWinnings(seriesTotal);
+                    PLAYERS.forEach(p => dayBalances[p] += seriesPayouts[p]);
+                }
             }
 
             return PLAYERS
@@ -1142,35 +1346,32 @@
                 await db.collection('games').doc(existing.id).delete();
             }
 
-            const scores = {};
+            const scores={}, handicaps={}, handicapScores={}, ballUsage={};
             PLAYERS.forEach(p => {
-                const score = parseInt(document.getElementById(`score_${p}`).value) || 0;
-                const handicap = parseInt(document.getElementById(`handicap_${p}`).value) || 0;
-                scores[p] = score + handicap;
+                const sc=parseInt(document.getElementById(`score_${p}`).value)||0;
+                const hc=parseInt(document.getElementById(`handicap_${p}`).value)||0;
+                scores[p]=sc; handicaps[p]=hc; handicapScores[p]=sc+hc;
+                const b1El=document.getElementById(`ball1_${p}`);
+                if(b1El&&b1El.value){
+                    const balls=getArsenalBalls(p), b1=balls.find(b=>b.id===b1El.value);
+                    const b2El=document.getElementById(`ball2_${p}`), sfEl=document.getElementById(`switchFrame_${p}`);
+                    const b2=(b2El&&b2El.value)?balls.find(b=>b.id===b2El.value):null;
+                    ballUsage[p]={ball1Id:b1?b1.id:null,ball1Name:b1?b1.name:null,ball2Id:b2?b2.id:null,ball2Name:b2?b2.name:null,switchFrame:(b2&&sfEl)?parseInt(sfEl.value):null};
+                }
             });
-
-            const success = await saveGame({
-                date,
-                gameNumber,
-                scores,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
+            const success = await saveGame({ date, gameNumber, scores, handicaps, handicapScores, ballUsage, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+            if (success) await incrementBallFrames(ballUsage);
 
             submitBtn.disabled = false;
             submitBtn.textContent = 'Add Game';
 
             if (success) {
-                // Clear scores but keep date
                 PLAYERS.forEach(p => {
-                    document.getElementById(`score_${p}`).value = '';
-                    document.getElementById(`handicap_${p}`).value = '';
-                    document.getElementById(`total_${p}`).textContent = '= 0';
+                    document.getElementById(`score_${p}`).value='';
+                    document.getElementById(`total_${p}`).textContent='= 0';
                 });
-
-                // Auto-advance game number
-                if (gameNumber < 3) {
-                    document.getElementById('gameNumber').value = gameNumber + 1;
-                }
+                if (gameNumber < 3) document.getElementById('gameNumber').value = gameNumber + 1;
+                generatePlayerInputs();
             }
         });
 
@@ -1179,9 +1380,14 @@
             tab.addEventListener('click', function() {
                 document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
                 document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-
                 this.classList.add('active');
-                document.getElementById(this.dataset.tab).classList.add('active');
+                const target = this.dataset.tab;
+                document.getElementById(target).classList.add('active');
+                if (target === 'arsenal')  renderArsenal();
+                if (target === 'lanetalk') renderLTSeries();
+                if (target === 'league')   renderLeagueScores();
+                if (target === 'leaderboard') renderLeaderboards();
+                if (target === 'rawdata')  renderPlayerView();
             });
         });
 
@@ -1402,12 +1608,26 @@
             return ranks;
         }
 
+        // Build combined league data: hardcoded LEAGUE_DATA + pushed weeks from Firebase
+        function getCombinedLeagueData() {
+            const pushed = (currentData.leagueWeeks || []).map((w, idx) => ({
+                week: LEAGUE_DATA.length + idx + 1,
+                date: w.date,
+                opponent: w.opponent || '',
+                result: { us: w.resultUs || 0, them: w.resultThem || 0 },
+                scores: w.scores,
+                fromFirebase: true
+            }));
+            return [...LEAGUE_DATA, ...pushed];
+        }
+
         // Render league scores
         function renderLeagueScores() {
             const container = document.getElementById('leagueScores');
+            const ALL_LEAGUE = getCombinedLeagueData();
 
             // Sort weeks in descending order (most recent first)
-            const sortedWeeks = [...LEAGUE_DATA].sort((a, b) => b.week - a.week);
+            const sortedWeeks = [...ALL_LEAGUE].sort((a, b) => b.week - a.week);
 
             let html = '';
 
@@ -1421,6 +1641,12 @@
                 const isWin = weekData.result.us > weekData.result.them;
                 const resultText = `${isWin ? 'W' : 'L'} ${weekData.result.us}-${weekData.result.them}`;
                 const resultClass = isWin ? 'result-win' : 'result-loss';
+
+                // Find any LT series linked to this week's date
+                const ltForWeek = ltSeriesData.filter(s =>
+                    s.linkedDate === weekData.date ||
+                    s.linkedDate === weekData.date.replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2').replace(/-(\d)-/g, '-0$1-').replace(/-(\d)$/, '-0$1')
+                );
 
                 html += `
                     <div class="league-week">
@@ -1436,6 +1662,7 @@
                                     <th>Game 2</th>
                                     <th>Game 3</th>
                                     <th>Series</th>
+                                    ${ltForWeek.length ? '<th style="color:#90caf9;font-size:12px;">LaneTalk</th>' : ''}
                                 </tr>
                             </thead>
                             <tbody>
@@ -1443,12 +1670,20 @@
 
                 PLAYERS.forEach(player => {
                     const pScores = scores[player];
+                    // Find LT series for this specific player this week
+                    const ltForPlayer = ltForWeek.find(s => s.player === player);
+                    const ltCell = ltForWeek.length
+                        ? (ltForPlayer
+                            ? `<td><span class="lt-badge" onclick="openLTModal('${ltForPlayer.id}')">&#127923; View &#9656;</span></td>`
+                            : '<td></td>')
+                        : '';
                     html += `<tr>
                         <td style="font-weight: bold; color: #B8860B;">${player}</td>
                         <td class="score-cell rank-${getRankClass(gm1Ranks[player])}">${formatScore(pScores.gm1, gm1Ranks[player])}</td>
                         <td class="score-cell rank-${getRankClass(gm2Ranks[player])}">${formatScore(pScores.gm2, gm2Ranks[player])}</td>
                         <td class="score-cell rank-${getRankClass(gm3Ranks[player])}">${formatScore(pScores.gm3, gm3Ranks[player])}</td>
                         <td class="score-cell rank-${getRankClass(seriesRanks[player])}" style="font-weight: bold;">${formatScore(pScores.series, seriesRanks[player])}</td>
+                        ${ltCell}
                     </tr>`;
                 });
 
@@ -1503,7 +1738,7 @@
             });
 
             // Go through each week
-            LEAGUE_DATA.forEach(weekData => {
+            getCombinedLeagueData().forEach(weekData => {
                 const scores = getScoresForMode(weekData, mode);
 
                 // Calculate ranks for each game
@@ -1594,7 +1829,7 @@
             const container = document.getElementById('playerRawData');
 
             // Sort weeks in ascending order for raw data view
-            const sortedWeeks = [...LEAGUE_DATA].sort((a, b) => a.week - b.week);
+            const sortedWeeks = [...getCombinedLeagueData()].sort((a, b) => a.week - b.week);
 
             // Calculate season totals
             let totalGames = 0;
@@ -1702,9 +1937,6 @@
             container.innerHTML = html;
         }
 
-        // Current chart instance
-        let playerChart = null;
-
         // Calculate global min/max for consistent Y-axis across all players
         function getGlobalChartRanges() {
             let allGames = [];
@@ -1715,7 +1947,7 @@
                 let runningPins = 0;
                 let runningGames = 0;
 
-                LEAGUE_DATA.forEach(week => {
+                getCombinedLeagueData().forEach(week => {
                     const p = week.scores[player];
                     if (p.gm1 !== null) {
                         allGames.push(p.gm1, p.gm2, p.gm3);
@@ -1739,7 +1971,7 @@
 
         // Get player data for charts
         function getPlayerChartData(player) {
-            const sortedWeeks = [...LEAGUE_DATA].sort((a, b) => a.week - b.week);
+            const sortedWeeks = [...getCombinedLeagueData()].sort((a, b) => a.week - b.week);
             const data = {
                 weeks: [],
                 series: [],
@@ -1959,56 +2191,43 @@
         // Render initial player data
         renderPlayerView();
 
-        // Calculate side bet leaderboard stats from Firebase data
+        // Calculate side bet leaderboard stats — only from 2/25/2026 onward
         function calculateSideBetLeaderboardStats(data) {
             const stats = {};
-
-            // Initialize stats for each player
             PLAYERS.forEach(player => {
                 stats[player] = { gameWins: 0, seriesWins: 0, money: 0 };
             });
 
-            // Group games by date
+            // Only count games from 2/25 onward
+            const eligibleGames = data.games.filter(g => countsForCash(g));
+
+            // Group eligible games by date
             const gamesByDate = {};
-            data.games.forEach(game => {
-                if (!gamesByDate[game.date]) {
-                    gamesByDate[game.date] = [];
-                }
+            eligibleGames.forEach(game => {
+                if (!gamesByDate[game.date]) gamesByDate[game.date] = [];
                 gamesByDate[game.date].push(game);
             });
 
-            // Process each game for wins
-            data.games.forEach(game => {
-                const scores = game.scores;
+            // Process each game for wins (use handicap scores per the rules)
+            eligibleGames.forEach(game => {
+                const scores = getBetScores(game);
                 const maxScore = Math.max(...PLAYERS.map(p => scores[p]));
                 const winners = PLAYERS.filter(p => scores[p] === maxScore);
-
-                // Count game wins (including shared wins for ties)
-                winners.forEach(player => {
-                    stats[player].gameWins++;
-                });
-
-                // Add game money
+                winners.forEach(player => { stats[player].gameWins++; });
                 const payouts = calculateGameWinnings(scores);
-                PLAYERS.forEach(player => {
-                    stats[player].money += payouts[player];
-                });
+                PLAYERS.forEach(player => { stats[player].money += payouts[player]; });
             });
 
             // Process series (only for complete dates with 3 games)
             Object.keys(gamesByDate).forEach(date => {
                 const dateGames = gamesByDate[date];
                 if (dateGames.length === 3) {
-                    // Calculate series totals
                     const seriesTotals = {};
                     PLAYERS.forEach(p => seriesTotals[p] = 0);
                     dateGames.forEach(game => {
-                        PLAYERS.forEach(p => {
-                            seriesTotals[p] += game.scores[p];
-                        });
+                        PLAYERS.forEach(p => { seriesTotals[p] += getBetScores(game)[p] || 0; });
                     });
 
-                    // Find series winners
                     const maxTotal = Math.max(...PLAYERS.map(p => seriesTotals[p]));
                     const seriesWinners = PLAYERS.filter(p => seriesTotals[p] === maxTotal);
 
@@ -2080,8 +2299,565 @@
             if (user) {
                 console.log('Signed in anonymously:', user.uid);
                 setupRealtimeListener();
+                setupArsenalListener();
+                setupLTListener();
             }
         });
+
+        // ── Push to League Stats ─────────────────────────────────────────
+        async function pushToLeague(date) {
+            const dg = currentData.games.filter(g => g.date === date).sort((a,b) => a.gameNumber - b.gameNumber);
+            if (dg.length !== 3) { alert('Need all 3 games entered first.'); return; }
+
+            const opponent = (document.getElementById(`opp_${date}`)?.value || '').trim();
+            const result   = document.getElementById(`res_${date}`)?.value || '';
+            const us       = parseInt(document.getElementById(`us_${date}`)?.value) || 0;
+            const them     = parseInt(document.getElementById(`them_${date}`)?.value) || 0;
+
+            // Build scores in LEAGUE_DATA format using scratch scores + handicap
+            const scores = {};
+            PLAYERS.forEach(p => {
+                const g1=dg.find(g=>g.gameNumber===1), g2=dg.find(g=>g.gameNumber===2), g3=dg.find(g=>g.gameNumber===3);
+                const hdcp = g1 && g1.handicaps ? (g1.handicaps[p]||0) : 0;
+                scores[p] = {
+                    gm1: g1 ? g1.scores[p] : 0,
+                    gm2: g2 ? g2.scores[p] : 0,
+                    gm3: g3 ? g3.scores[p] : 0,
+                    series: (g1?g1.scores[p]:0)+(g2?g2.scores[p]:0)+(g3?g3.scores[p]:0),
+                    hdcp
+                };
+            });
+
+            try {
+                await db.collection('leagueWeeks').add({ date, opponent, result, resultUs: us, resultThem: them, scores, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                alert('Added to League Stats!');
+            } catch(e) { console.error(e); alert('Error saving.'); }
+        }
+
+        // ── Arsenal ───────────────────────────────────────────────────────
+        function setupArsenalListener() {
+            db.collection('arsenal').onSnapshot(snap => {
+                arsenalData = {};
+                snap.docs.forEach(doc => { arsenalData[doc.id] = { id: doc.id, ...doc.data() }; });
+                generatePlayerInputs();
+                if (document.getElementById('arsenal').classList.contains('active')) renderArsenal();
+            });
+        }
+
+        function renderArsenal() {
+            const container = document.getElementById('arsenalContent');
+            container.innerHTML = PLAYERS.map(player => {
+                const balls = getArsenalBalls(player);
+                const ballsHtml = balls.length ? balls.map(ball => {
+                    const frames=ball.frames||0, games=Math.floor(frames/10);
+                    return `<div class="ball-item">
+                        <div style="display:flex;align-items:center;gap:12px;flex:1;">
+                            <span style="font-size:22px;">&#127923;</span>
+                            <div><div style="font-weight:bold;font-size:15px;">${escHtml(ball.name)}</div>
+                            <div style="font-size:12px;color:#888;">${escHtml(ball.brand||'')}${ball.brand&&ball.weight?' &middot; ':''}${ball.weight?ball.weight+' lbs':''}</div></div>
+                        </div>
+                        <div class="ball-stats">
+                            <div class="ball-stat"><div class="ball-stat-value">${frames}</div><div class="ball-stat-label">Frames</div></div>
+                            <div class="ball-stat"><div class="ball-stat-value">${games}</div><div class="ball-stat-label">Games</div></div>
+                        </div>
+                        <div style="display:flex;gap:6px;">
+                            <button class="btn-sm btn-warn" onclick="resetBallFrames('${player}','${ball.id}')">&#128295; Reset</button>
+                            <button class="btn-sm danger" onclick="deleteBall('${player}','${ball.id}')">&#10005;</button>
+                        </div>
+                    </div>`;
+                }).join('') : '<div style="color:#999;font-style:italic;padding:6px 0;">No balls yet.</div>';
+
+                return `<div class="arsenal-player-section">
+                    <div class="arsenal-player-header"><span>&#127923; ${player}</span><span style="font-size:13px;opacity:0.7;">${balls.length} ball${balls.length!==1?'s':''}</span></div>
+                    <div class="arsenal-player-body">
+                        <div class="ball-list">${ballsHtml}</div>
+                        <div class="arsenal-add-form">
+                            <div class="form-group"><label>Ball Name</label><input type="text" id="nb_name_${player}" placeholder="e.g. Hammer Black Widow" style="padding:8px;border:1px solid #ccc;border-radius:4px;font-size:14px;width:180px;"></div>
+                            <div class="form-group"><label>Brand</label><input type="text" id="nb_brand_${player}" placeholder="Hammer" style="padding:8px;border:1px solid #ccc;border-radius:4px;font-size:14px;width:120px;"></div>
+                            <div class="form-group"><label>Weight</label><input type="number" id="nb_weight_${player}" placeholder="15" min="6" max="16" style="padding:8px;border:1px solid #ccc;border-radius:4px;font-size:14px;width:70px;"></div>
+                            <button class="btn-sm" onclick="addBall('${player}')">+ Add</button>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        async function addBall(player) {
+            const n=document.getElementById(`nb_name_${player}`), b=document.getElementById(`nb_brand_${player}`), w=document.getElementById(`nb_weight_${player}`);
+            const name=n.value.trim(); if(!name){alert('Enter a ball name.');return;}
+            const existing=arsenalData[player]||{balls:[]};
+            const newBall={id:'b'+Date.now(),name,brand:b.value.trim(),weight:w.value?parseInt(w.value):null,frames:0};
+            try { await db.collection('arsenal').doc(player).set({balls:[...(existing.balls||[]),newBall]},{merge:true}); n.value='';b.value='';w.value=''; }
+            catch(e){console.error(e);alert('Error adding ball.');}
+        }
+
+        async function deleteBall(player, ballId) {
+            if(!confirm('Remove this ball?')) return;
+            const ex=arsenalData[player]; if(!ex) return;
+            try { await db.collection('arsenal').doc(player).set({balls:(ex.balls||[]).filter(b=>b.id!==ballId)},{merge:true}); }
+            catch(e){console.error(e);}
+        }
+
+        async function resetBallFrames(player, ballId) {
+            if(!confirm('Reset frame/game counter? (use after maintenance)')) return;
+            const ex=arsenalData[player]; if(!ex) return;
+            try { await db.collection('arsenal').doc(player).set({balls:(ex.balls||[]).map(b=>b.id===ballId?{...b,frames:0}:b)},{merge:true}); }
+            catch(e){console.error(e);}
+        }
+
+        async function incrementBallFrames(ballUsage) {
+            for (const player of PLAYERS) {
+                const u=ballUsage[player]; if(!u||!u.ball1Id) continue;
+                const ex=arsenalData[player]; if(!ex) continue;
+                const balls=[...(ex.balls||[])];
+                let b1f=10, b2f=0;
+                if(u.ball2Id&&u.switchFrame){b1f=u.switchFrame-1;b2f=10-b1f;}
+                let changed=false;
+                balls.forEach(b=>{
+                    if(b.id===u.ball1Id&&b1f>0){b.frames=(b.frames||0)+b1f;changed=true;}
+                    if(b.id===u.ball2Id&&b2f>0){b.frames=(b.frames||0)+b2f;changed=true;}
+                });
+                if(changed) try{await db.collection('arsenal').doc(player).update({balls});}catch(e){console.error(e);}
+            }
+        }
+
+        // ── LaneTalk ──────────────────────────────────────────────────────
+        function setupLTListener() {
+            db.collection('lanetalkSeries').orderBy('importedAt','desc').onSnapshot(snap => {
+                ltSeriesData = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderHistory();
+                if (document.getElementById('lanetalk').classList.contains('active')) renderLTSeries();
+            });
+        }
+
+        async function importLaneTalk() {
+            const urlInput=document.getElementById('ltUrl'), statusEl=document.getElementById('ltImportStatus'), btn=document.getElementById('ltImportBtn');
+            const url=urlInput.value.trim();
+            if(!url||!url.includes('shared.lanetalk.com')){statusEl.textContent='⚠ Enter a valid shared.lanetalk.com link.';statusEl.style.color='#c62828';return;}
+            if(ltSeriesData.find(s=>s.url===url)){statusEl.textContent='✓ Already imported.';statusEl.style.color='#2e7d32';return;}
+            btn.disabled=true;btn.textContent='Importing...';statusEl.textContent='Fetching...';statusEl.style.color='#666';
+            try {
+                let html=null;
+                for (const proxy of [
+                    u=>`https://api.allorigins.win/get?url=${encodeURIComponent(u)}`,
+                    u=>`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`,
+                    u=>`https://corsproxy.io/?${encodeURIComponent(u)}`,
+                    u=>`https://thingproxy.freeboard.io/fetch/${encodeURIComponent(u)}`
+                ]) {
+                    try {
+                        const r=await fetch(proxy(url),{signal:AbortSignal.timeout(10000)});
+                        if(!r.ok) continue;
+                        const t=await r.text();
+                        const candidate=t.trim().startsWith('{')?JSON.parse(t).contents:t;
+                        if(candidate&&candidate.includes('lanetalk')){html=candidate;break;}
+                    } catch(e) { /* try next proxy */ }
+                }
+                if (!html) throw new Error('All proxies failed');
+                const parsed=parseLaneTalkHTML(html,url);
+                if(!parsed){statusEl.textContent='✗ Could not parse the page.';statusEl.style.color='#c62828';}
+                else {
+                    await db.collection('lanetalkSeries').add({...parsed,importedAt:new Date().toISOString()});
+                    statusEl.textContent=`✓ Imported: ${parsed.player} · ${parsed.total}`;
+                    statusEl.style.color='#2e7d32';
+                    urlInput.value='';
+                }
+            } catch(e) { console.error(e); statusEl.textContent=e.message==='All proxies failed'?'✗ Could not reach LaneTalk — all proxies blocked. Try again later.':'✗ Network error.'; statusEl.style.color='#c62828'; }
+            btn.disabled=false; btn.textContent='Import Series';
+        }
+
+        function parseLaneTalkHTML(html, url) {
+            try {
+                let player='',center='',dateStr='',total=0,average=0;
+                const tM=html.match(/<title>([^<]+)<\/title>/i);
+                if(tM){const m=tM[1].match(/^(.+?) bowled (\d+) at (.+)$/);if(m){player=m[1].trim();total=parseInt(m[2]);center=m[3].trim();}}
+                const dM=html.match(/on\s+(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),\s+([A-Z][a-z]+ \d+,\s*\d+)/i);
+                if(dM){const d=new Date(dM[1]);if(!isNaN(d))dateStr=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+                const pt=html.replace(/<[^>]+>/g,'\n');
+                const aM=pt.match(/Average\s*\n+\s*(\d+)/i); if(aM) average=parseInt(aM[1]);
+                const insights={strikeRate:xpct(pt,'Strikes'),spareRate:xpct(pt,'Spares'),splitRate:xpct(pt,'Splits'),pocketHitRate:xpct(pt,'Pocket hits'),carryRate:xpct(pt,'Carry'),firstBallAvg:xnum(pt,'First ball average')};
+                const games=parseLTGames(html);
+                // Parse pin leave entries: pattern is "N Time(s)\nPCT %"
+                const pinLeaves = parsePinLeaves(pt, games);
+                if(!player||!dateStr) return null;
+                return{player,center,date:dateStr,url,total,average,insights,games,pinLeaves};
+            }catch(e){console.error(e);return null;}
+        }
+        function xpct(t,l){const m=t.match(new RegExp(l+'[\\s\\S]{0,300}?(\\d+)%','i'));return m?parseInt(m[1]):null;}
+        function xnum(t,l){const m=t.match(new RegExp(l+'[\\s\\S]{0,300}?(\\d+\\.?\\d*)','i'));return m?parseFloat(m[1]):null;}
+
+        function parsePinLeaves(plainText, games) {
+            // Extract "N Time(s)\nPCT %" pairs after "Pin leaves" section
+            const pinSection = plainText.split(/Pin leaves/i)[1] || '';
+            const entries = [];
+            const pattern = /(\d+)\s+Times?\s*[\n\r]+\s*(\d+)\s*%/gi;
+            let m;
+            while ((m = pattern.exec(pinSection)) !== null && entries.length < 20) {
+                entries.push({ count: parseInt(m[1]), pct: parseInt(m[2]) });
+            }
+            // Derive pin leave patterns from frame data
+            const leaves = deriveLeavePatterns(games);
+            // Merge counts/pcts with derived pin patterns
+            return entries.map((e, i) => ({
+                count: e.count,
+                pct: e.pct,
+                pins: leaves[i] || null  // array of pin numbers left standing (1-10), null if unknown
+            }));
+        }
+
+        function deriveLeavePatterns(games) {
+            // Go through each frame, collect non-strike first balls
+            // and determine which pins were left
+            const leaves = [];
+            (games || []).forEach(game => {
+                (game.frames || []).forEach(fr => {
+                    if (!fr.throws || fr.throws[0] === 'X') return; // strike = no leave
+                    const first = fr.throws[0];
+                    const knocked = first === '-' ? 0 : (parseInt(first) || 0);
+                    const left = 10 - knocked;
+                    // Use common leave patterns based on pins left
+                    leaves.push(getTypicalLeave(left, fr.frame));
+                });
+            });
+            return leaves;
+        }
+
+        function getTypicalLeave(pinsLeft, frameNum) {
+            // Returns array of pin numbers remaining using common patterns
+            // Standard pin positions: 1=headpin, 2,3=second row, 4,5,6=third, 7,8,9,10=back
+            const layouts = {
+                0: [],
+                1: [7],         // single pin, usually 7
+                2: [7,10],      // 7-10 split (most dramatic 2-pin)
+                3: [7,8,10],
+                4: [6,7,9,10],
+                5: [5,6,7,9,10],
+                6: [4,6,7,9,10],
+                7: [3,4,6,7,9,10],
+                8: [2,3,4,6,7,9,10],
+                9: [2,3,4,5,6,7,9,10],
+            };
+            return layouts[Math.min(pinsLeft, 9)] || [];
+        }
+
+        function parseLTGames(html) {
+            const games=[], text=html.replace(/<[^>]+>/g,'\n');
+            const blocks=('\n'+text).split(/\nGame\s+(\d)\s*\n/);
+            for(let bi=1;bi<blocks.length-1;bi+=2){
+                const gameNum=parseInt(blocks[bi]), block=blocks[bi+1]||'';
+                const tokens=block.split(/\n/).map(t=>t.trim()).filter(Boolean);
+                const frames=[]; let prevRun=0, j=0;
+                while(j<tokens.length&&frames.length<10){
+                    const fn=parseInt(tokens[j]);
+                    if(isNaN(fn)||fn<1||fn>10||fn!==frames.length+1){j++;continue;}
+                    j++;
+                    const throws=[]; let running=null;
+                    while(j<tokens.length){
+                        const t=tokens[j], val=parseInt(t);
+                        if(!isNaN(val)){
+                            const canBeRun=throws.length>=1&&val>prevRun&&val<=prevRun+30;
+                            if(canBeRun&&val>9){running=val;prevRun=val;j++;break;}
+                            else if(canBeRun&&val<=9&&throws.length>=2){
+                                const nxt=tokens[j+1]?parseInt(tokens[j+1]):NaN;
+                                if(!isNaN(nxt)&&nxt===fn+1){running=val;prevRun=val;j++;break;}
+                                else{throws.push(String(val));j++;}
+                            } else{throws.push(String(val));j++;}
+                        } else if(t==='X'||t==='/'||t==='-'||t.length===1){throws.push(t);j++;}
+                        else break;
+                    }
+                    frames.push({frame:fn,throws,ball1:throws[0]||'',ball2:throws[1]||null,running});
+                }
+                games.push({gameNumber:gameNum,total:frames.length?(frames[frames.length-1].running||0):0,frames});
+            }
+            return games;
+        }
+
+        function renderLTSeries() {
+            const container=document.getElementById('ltSeriesList');
+            if(!ltSeriesData.length){container.innerHTML='<p class="no-data">No series imported yet.</p>';return;}
+            // Get all dates that have 3 games for linking
+            const availDates=[...new Set(currentData.games.map(g=>g.date))].sort((a,b)=>b.localeCompare(a));
+            container.innerHTML = ltSeriesData.map(s => {
+                const dateOpts=availDates.map(d=>`<option value="${d}" ${s.linkedDate===d?'selected':''}>${d}</option>`).join('');
+                const insightsHtml=s.insights?`<div class="lt-insights">${
+                    [['Strikes',s.insights.strikeRate,'%'],['Spares',s.insights.spareRate,'%'],['Splits',s.insights.splitRate,'%'],
+                     ['Pocket Hits',s.insights.pocketHitRate,'%'],['Carry',s.insights.carryRate,'%'],['FB Avg',s.insights.firstBallAvg,'']
+                    ].filter(([,v])=>v!=null).map(([l,v,su])=>`<div class="lt-insight-item"><div class="lt-iv">${v}${su}</div><div class="lt-il">${l}</div></div>`).join('')
+                }</div>`:'';
+                const balls=getArsenalBalls(s.player), ballOpts=balls.map(b=>`<option value="${b.id}">${escHtml(b.name)}</option>`).join('');
+                const gamesHtml=(s.games||[]).map(game=>{
+                    const ov=s.ballUsageOverride&&s.ballUsageOverride[game.gameNumber];
+                    const framesHtml=(game.frames||[]).map(fr=>{
+                        const bl=ov?getBallLabel(ov,fr.frame):'';
+                        const throwsHtml=(fr.throws||[]).map(t=>`<span class="${t==='X'?'lt-strike':t==='/'?'lt-spare':''}">${escHtml(t)}</span>`).join(' ');
+                        return `<td>${throwsHtml}<br><small style="color:#aaa;">${fr.running!=null?fr.running:''}</small>${bl?`<div class="lt-frame-ball">${escHtml(bl)}</div>`:''}`;
+                    }).join('');
+                    const existOv=s.ballUsageOverride&&s.ballUsageOverride[game.gameNumber]||{};
+                    const selB1=existOv.ball1Id?`<option value="${existOv.ball1Id}" selected>${escHtml(existOv.ball1Name||'')}</option>`:'';
+                    const selB2=existOv.ball2Id?`<option value="${existOv.ball2Id}" selected>${escHtml(existOv.ball2Name||'')}</option>`:'';
+                    const selSF=existOv.switchFrame||1;
+                    const assignHtml=balls.length?`<div class="lt-ball-row">
+                        <label>Ball 1:</label>
+                        <select id="ltb1_${s.id}_${game.gameNumber}"><option value="">-- none --</option>${ballOpts.replace(`value="${existOv.ball1Id||''}"`,`value="${existOv.ball1Id||''}" selected`)}</select>
+                        <label>Ball 2:</label>
+                        <select id="ltb2_${s.id}_${game.gameNumber}"><option value="">-- none --</option>${ballOpts.replace(`value="${existOv.ball2Id||''}"`,`value="${existOv.ball2Id||''}" selected`)}</select>
+                        <label>Switch Frame:</label>
+                        <select id="ltsf_${s.id}_${game.gameNumber}">${[...Array(10)].map((_,i)=>`<option value="${i+1}" ${existOv.switchFrame===i+1?'selected':''}>${i+1}</option>`).join('')}</select>
+                        <button class="btn-sm" onclick="saveLTBalls('${s.id}',${game.gameNumber},'${s.player}')">&#10003; Save</button>
+                        ${existOv.ball1Name?`<span style="font-size:12px;color:#2e7d32;">&#10003; ${escHtml(existOv.ball1Name)}${existOv.ball2Name?' &#8594; '+escHtml(existOv.ball2Name)+' (fr.'+existOv.switchFrame+')':''}</span>`:''}
+                    </div>`:'<div style="padding:8px 14px;font-size:12px;color:#aaa;">Add balls to arsenal to tag ball usage.</div>';
+                    return `<div class="lt-game-block">
+                        <div class="lt-game-title"><span>Game ${game.gameNumber}</span><span>${game.total||''}</span></div>
+                        <div class="lt-scorecard"><table><thead><tr><th>Frame</th>${(game.frames||[]).map(f=>`<th>${f.frame}</th>`).join('')}</tr></thead>
+                        <tbody><tr><td style="font-weight:bold;color:#B8860B;">Throws</td>${framesHtml}</tr></tbody></table></div>
+                        ${assignHtml}</div>`;
+                }).join('');
+                return `<div style="border:1px solid #ddd;border-radius:8px;margin-bottom:20px;overflow:hidden;">
+                    <div style="background:#333;color:#B8860B;padding:12px 15px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
+                        <div><strong>${escHtml(s.player)} — ${s.total} Series</strong><div style="font-size:12px;color:#aaa;">${escHtml(s.center||'')} · ${s.date||''}</div></div>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <a href="${s.url}" target="_blank" style="color:#aaa;font-size:12px;">View &#8599;</a>
+                            <button class="btn-sm danger" onclick="deleteLT('${s.id}')">&#10005;</button>
+                        </div>
+                    </div>
+                    <div style="padding:14px;">
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
+                            <label style="font-size:13px;font-weight:600;color:#555;">Link to date:</label>
+                            <select style="font-size:13px;padding:5px 8px;" onchange="linkLT('${s.id}',this.value)"><option value="">-- select --</option>${dateOpts}</select>
+                            ${s.linkedDate?`<span style="color:#4caf50;font-size:12px;">&#10003; Linked to ${s.linkedDate}</span>`:''}
+                        </div>
+                        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px;">
+                            <div class="lt-stat-box"><div class="lt-sv">${s.total}</div><div class="lt-sl">Total</div></div>
+                            <div class="lt-stat-box"><div class="lt-sv">${s.average||'—'}</div><div class="lt-sl">Avg</div></div>
+                            <div class="lt-stat-box"><div class="lt-sv">${(s.games||[]).length}</div><div class="lt-sl">Games</div></div>
+                        </div>
+                        ${insightsHtml}
+                        ${gamesHtml}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function getBallLabel(ov, frameNum) {
+            if(!ov||!ov.ball1Name) return '';
+            if(!ov.ball2Name) return ov.ball1Name;
+            return (ov.switchFrame&&frameNum>=ov.switchFrame)?ov.ball2Name:ov.ball1Name;
+        }
+
+        async function linkLT(seriesId, date) {
+            try { await db.collection('lanetalkSeries').doc(seriesId).update({linkedDate:date}); }
+            catch(e){console.error(e);}
+        }
+
+        async function saveLTBalls(seriesId, gameNum, player) {
+            const s = ltSeriesData.find(x => x.id === seriesId); if (!s) return;
+            const balls = getArsenalBalls(player);
+            const b1Id  = document.getElementById(`ltb1_${seriesId}_${gameNum}`)?.value || null;
+            const b2Id  = document.getElementById(`ltb2_${seriesId}_${gameNum}`)?.value || null;
+            const sf    = parseInt(document.getElementById(`ltsf_${seriesId}_${gameNum}`)?.value) || null;
+            const b1    = balls.find(b => b.id === b1Id);
+            const b2    = balls.find(b => b.id === b2Id);
+            const ov    = JSON.parse(JSON.stringify(s.ballUsageOverride || {}));
+            ov[gameNum] = {
+                ball1Id:   b1Id  || null, ball1Name: b1 ? b1.name : null,
+                ball2Id:   b2Id  || null, ball2Name: b2 ? b2.name : null,
+                switchFrame: (b2Id && sf) ? sf : null
+            };
+            try {
+                await db.collection('lanetalkSeries').doc(seriesId).update({ ballUsageOverride: ov });
+            } catch(e) { console.error(e); alert('Error saving.'); }
+        }
+
+        async function deleteLT(id) {
+            if(!confirm('Remove this series?')) return;
+            try{await db.collection('lanetalkSeries').doc(id).delete();}catch(e){console.error(e);}
+        }
+
+        // ── LaneTalk Modal (opened from History tab when clicking a score with LT linked) ──
+        // ── SVG pin diagram ───────────────────────────────────────────────
+        // pins: array of pin numbers (1-10) that are STILL STANDING (light)
+        // all others are knocked down (dark)
+        function pinDiagramSVG(standingPins) {
+            const standing = new Set(standingPins || []);
+            // Pin positions in a 100x90 viewBox — triangle pointing down toward bowler
+            // Row 1 (back, farthest): 7,8,9,10
+            // Row 2: 4,5,6
+            // Row 3: 2,3
+            // Row 4 (front, closest): 1
+            const pos = {
+                7:  [14, 18],  8:  [38, 18],  9:  [62, 18],  10: [86, 18],
+                4:  [26, 38],  5:  [50, 38],  6:  [74, 38],
+                2:  [38, 58],  3:  [62, 58],
+                1:  [50, 76]
+            };
+            const pins = Object.entries(pos).map(([num, [cx, cy]]) => {
+                const isStanding = standing.has(parseInt(num));
+                const fill   = isStanding ? '#e0e0e0' : '#2a2a2a';
+                const stroke = isStanding ? '#fff' : '#444';
+                return `<circle cx="${cx}" cy="${cy}" r="10" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
+            }).join('');
+            return `<svg viewBox="0 0 100 92" width="80" height="74" xmlns="http://www.w3.org/2000/svg">${pins}</svg>`;
+        }
+
+        // ── Donut chart (Canvas-based) ────────────────────────────────────
+        function renderDonutChart(canvasId, strikeRate, spareRate, splitRate) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const cx = canvas.width / 2, cy = canvas.height / 2, r = 80, ir = 48;
+
+            const total = (strikeRate||0) + (spareRate||0) + (splitRate||0);
+            const scale = total > 0 ? (2 * Math.PI / total) : 0;
+
+            const segments = [
+                { val: strikeRate||0, color: '#00d4ff' },  // cyan  — strikes
+                { val: spareRate||0,  color: '#ffd600' },  // yellow — spares
+                { val: splitRate||0,  color: '#ff4081' },  // pink  — splits
+            ];
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            let angle = -Math.PI / 2;
+            segments.forEach(seg => {
+                if (seg.val <= 0) return;
+                const sweep = seg.val * scale;
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.arc(cx, cy, r, angle, angle + sweep);
+                ctx.closePath();
+                ctx.fillStyle = seg.color;
+                ctx.fill();
+                angle += sweep;
+            });
+
+            // Inner hole
+            ctx.beginPath();
+            ctx.arc(cx, cy, ir, 0, 2 * Math.PI);
+            ctx.fillStyle = '#3a3a3a';
+            ctx.fill();
+
+            // Center text
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'center';
+            ctx.font = 'bold 18px sans-serif';
+            ctx.fillText(`${strikeRate||0}%`, cx, cy - 4);
+            ctx.font = '13px sans-serif';
+            ctx.fillStyle = '#aaa';
+            ctx.fillText('Strikes', cx, cy + 16);
+        }
+
+        function openLTModal(seriesId) {
+            const s = ltSeriesData.find(x => x.id === seriesId);
+            if (!s) return;
+
+            document.getElementById('ltModalTitle').textContent = `${s.player} — ${s.total} Series`;
+            document.getElementById('ltModalMeta').textContent  = `${s.center||''} · ${s.date||''}`;
+
+            const balls    = getArsenalBalls(s.player);
+            const ballOpts = balls.map(b => `<option value="${b.id}">${escHtml(b.name)}</option>`).join('');
+            const ins      = s.insights || {};
+
+            // ── Overview stat boxes ───────────────────────────────────────
+            let body = `<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
+                <div class="lt-stat-box"><div class="lt-sv">${s.total}</div><div class="lt-sl">Total</div></div>
+                <div class="lt-stat-box"><div class="lt-sv">${s.average||'—'}</div><div class="lt-sl">Avg</div></div>
+                <div class="lt-stat-box"><div class="lt-sv">${ins.pocketHitRate!=null?ins.pocketHitRate+'%':'—'}</div><div class="lt-sl">Pocket</div></div>
+                <div class="lt-stat-box"><div class="lt-sv">${ins.carryRate!=null?ins.carryRate+'%':'—'}</div><div class="lt-sl">Carry</div></div>
+                <div class="lt-stat-box"><div class="lt-sv">${ins.firstBallAvg!=null?ins.firstBallAvg:'—'}</div><div class="lt-sl">FB Avg</div></div>
+            </div>`;
+
+            // ── Donut chart + legend ──────────────────────────────────────
+            const chartId = `ltDonut_${seriesId}`;
+            body += `<div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap;margin-bottom:20px;background:#3a3a3a;border-radius:10px;padding:16px;">
+                <div>
+                    <div style="text-align:center;background:#444;color:#fff;font-weight:bold;font-size:13px;padding:8px 16px;border-radius:6px 6px 0 0;margin-bottom:4px;">First ball</div>
+                    <canvas id="${chartId}" width="200" height="200" style="display:block;"></canvas>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px;">
+                    <div style="color:#ffd600;font-size:14px;">&#9679; ${ins.spareRate||0}%&nbsp; Spares</div>
+                    <div style="color:#ff4081;font-size:14px;">&#9679; ${ins.splitRate||0}%&nbsp; Splits</div>
+                    <div style="color:#00d4ff;font-size:14px;">&#9679; ${ins.strikeRate||0}%&nbsp; Strikes</div>
+                </div>
+            </div>`;
+
+            // ── Game scorecards ───────────────────────────────────────────
+            body += `<div style="margin-bottom:20px;">`;
+            (s.games || []).forEach(game => {
+                const ov = (s.ballUsageOverride && s.ballUsageOverride[game.gameNumber]) || {};
+                const framesHtml = (game.frames || []).map(fr => {
+                    const bl = ov.ball1Name ? getBallLabel(ov, fr.frame) : '';
+                    const throwsHtml = (fr.throws || []).map(t =>
+                        `<span class="${t==='X'?'lt-strike':t==='/'?'lt-spare':''}">${escHtml(t)}</span>`
+                    ).join(' ');
+                    return `<td style="min-width:38px;text-align:center;padding:5px 4px;">
+                        <div>${throwsHtml}</div>
+                        <div style="font-size:11px;color:#aaa;">${fr.running != null ? fr.running : ''}</div>
+                        ${bl ? `<div class="lt-frame-ball">${escHtml(bl)}</div>` : ''}
+                    </td>`;
+                }).join('');
+
+                body += `<div class="lt-game-block" style="margin-bottom:12px;">
+                    <div class="lt-game-title"><span>Game ${game.gameNumber}</span><span style="color:#aaa;">${game.total||''}</span></div>
+                    <div class="lt-scorecard">
+                        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                            <thead><tr style="background:#444;">
+                                <th style="padding:5px 8px;color:#B8860B;text-align:left;">Throws</th>
+                                ${(game.frames||[]).map(f=>`<th style="padding:5px 4px;color:#ddd;font-size:11px;text-align:center;">${f.frame}</th>`).join('')}
+                            </tr></thead>
+                            <tbody><tr style="background:#555;color:#fff;">
+                                <td style="padding:5px 8px;font-weight:bold;color:#B8860B;white-space:nowrap;">Score</td>
+                                ${framesHtml}
+                            </tr></tbody>
+                        </table>
+                    </div>
+                    <div class="lt-ball-row">
+                        <label>Ball 1:</label>
+                        <select id="ltb1_${s.id}_${game.gameNumber}"><option value="">-- none --</option>${ballOpts.replace(`value="${ov.ball1Id||''}"`,`value="${ov.ball1Id||''}" selected`)}</select>
+                        <label>Ball 2:</label>
+                        <select id="ltb2_${s.id}_${game.gameNumber}"><option value="">-- none --</option>${ballOpts.replace(`value="${ov.ball2Id||''}"`,`value="${ov.ball2Id||''}" selected`)}</select>
+                        <label>Switch Frame:</label>
+                        <select id="ltsf_${s.id}_${game.gameNumber}">${[...Array(10)].map((_,i)=>`<option value="${i+1}" ${ov.switchFrame===i+1?'selected':''}>${i+1}</option>`).join('')}</select>
+                        <button class="btn-sm" onclick="saveLTBalls('${s.id}',${game.gameNumber},'${s.player}')">&#10003; Save</button>
+                        ${ov.ball1Name?`<span style="font-size:12px;color:#4caf50;">&#10003; ${escHtml(ov.ball1Name)}${ov.ball2Name?' → '+escHtml(ov.ball2Name)+' (fr.'+ov.switchFrame+')':''}</span>`:''}
+                    </div>
+                </div>`;
+            });
+            body += `</div>`;
+
+            // ── Pin leaves ────────────────────────────────────────────────
+            const pinLeaves = s.pinLeaves || [];
+            if (pinLeaves.length) {
+                body += `<div style="margin-bottom:20px;">
+                    <div style="font-size:16px;font-weight:bold;color:#B8860B;margin-bottom:12px;padding-bottom:6px;border-bottom:2px solid #B8860B;">Pin Leaves</div>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;">`;
+                pinLeaves.forEach(leaf => {
+                    const converted = leaf.pct === 100
+                        ? `<span style="color:#4caf50;font-weight:bold;">${leaf.pct}%</span>`
+                        : leaf.pct === 0
+                            ? `<span style="color:#f44336;font-weight:bold;">${leaf.pct}%</span>`
+                            : `<span style="color:#ffd600;font-weight:bold;">${leaf.pct}%</span>`;
+                    body += `<div style="background:#3a3a3a;border-radius:8px;padding:8px;text-align:center;">
+                        <div style="font-size:11px;color:#aaa;margin-bottom:6px;">${leaf.count} Time${leaf.count!==1?'s':''}</div>
+                        <div style="display:flex;justify-content:center;margin-bottom:6px;">${pinDiagramSVG(leaf.pins)}</div>
+                        <div style="font-size:15px;">${converted}</div>
+                    </div>`;
+                });
+                body += `</div></div>`;
+            }
+
+            body += `<div style="margin-top:14px;padding-top:12px;border-top:1px solid #eee;text-align:right;">
+                <a href="${s.url}" target="_blank" style="color:#1565c0;font-size:13px;">View on LaneTalk &#8599;</a>
+            </div>`;
+
+            document.getElementById('ltModalBody').innerHTML = body;
+            document.getElementById('ltModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+
+            // Render donut chart after DOM is ready
+            setTimeout(() => renderDonutChart(chartId, ins.strikeRate, ins.spareRate, ins.splitRate), 50);
+        }
+        function closeLTModal() { document.getElementById('ltModal').style.display='none'; document.body.style.overflow=''; }
+        document.getElementById('ltModal').addEventListener('click', function(e){ if(e.target===this) closeLTModal(); });
+
     </script>
 </body>
 </html>
