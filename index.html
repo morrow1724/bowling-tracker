@@ -902,6 +902,18 @@
         const PLAYERS   = ['Nick', 'Kevin', 'Cub', 'Matt'];
         const BET_AMOUNT = 2;
 
+        // Format any date string as M/D/YYYY (no leading zeros)
+        function formatDateMDY(d) {
+            if (!d) return '';
+            let m, day, y;
+            if (d.includes('/')) {
+                [m, day, y] = d.split('/');
+            } else {
+                [y, m, day] = d.split('-');
+            }
+            return `${parseInt(m)}/${parseInt(day)}/${y}`;
+        }
+
         // Parse any date format (YYYY-MM-DD or M/D/YYYY) to a timestamp
         function parseDateMs(d) {
             if (!d) return 0;
@@ -926,7 +938,7 @@
         }
 
         // Current data (updated by real-time listener)
-        let currentData  = { games: [] };
+        let currentData  = { games: [], deletedLeagueWeeks: new Set() };
         let arsenalData  = {};  // player -> { balls:[] }
         let ltSeriesData = [];  // imported LaneTalk series
         let playerChart  = null;
@@ -1014,6 +1026,13 @@
             db.collection('leagueWeeks').onSnapshot(snap => {
                 currentData.leagueWeeks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
                 renderHistory();
+            });
+
+            // Listen for deleted hardcoded week numbers
+            db.collection('deletedLeagueWeeks').onSnapshot(snap => {
+                currentData.deletedLeagueWeeks = new Set(snap.docs.map(d => d.data().weekNum));
+                renderLeagueScores();
+                renderLeaderboards();
             });
 
             db.collection('games').orderBy('date', 'desc').onSnapshot(
@@ -1610,15 +1629,18 @@
 
         // Build combined league data: hardcoded LEAGUE_DATA + pushed weeks from Firebase
         function getCombinedLeagueData() {
+            const deleted = currentData.deletedLeagueWeeks || new Set();
             const pushed = (currentData.leagueWeeks || []).map((w, idx) => ({
                 week: LEAGUE_DATA.length + idx + 1,
                 date: w.date,
                 opponent: w.opponent || '',
                 result: { us: w.resultUs || 0, them: w.resultThem || 0 },
                 scores: w.scores,
-                fromFirebase: true
+                fromFirebase: true,
+                id: w.id
             }));
-            return [...LEAGUE_DATA, ...pushed];
+            const hardcoded = LEAGUE_DATA.filter(w => !deleted.has(w.week));
+            return [...hardcoded, ...pushed];
         }
 
         // Render league scores
@@ -1652,7 +1674,10 @@
                     <div class="league-week">
                         <div class="league-week-header">
                             <span>Week ${weekData.week} - ${weekData.date}</span>
-                            <span><span class="${resultClass}">${resultText}</span> vs ${weekData.opponent}</span>
+                            <span style="display:flex;align-items:center;gap:10px;">
+                                <span><span class="${resultClass}">${resultText}</span> vs ${weekData.opponent}</span>
+                                <button onclick="deleteLeagueWeek('${weekData.fromFirebase ? weekData.id : ''}',${weekData.fromFirebase ? 'null' : weekData.week})" style="background:#c62828;color:#fff;border:none;border-radius:4px;padding:2px 8px;font-size:11px;cursor:pointer;line-height:18px;">&#10005; Delete</button>
+                            </span>
                         </div>
                         <table class="league-table">
                             <thead>
@@ -1882,7 +1907,7 @@
                     html += `
                         <tr>
                             <td>${week.week}</td>
-                            <td>${week.date}</td>
+                            <td>${formatDateMDY(week.date)}</td>
                             <td>${week.opponent}</td>
                             <td class="${resultClass}">${resultText}</td>
                             <td colspan="8" style="color: #999; font-style: italic;">Absent</td>
@@ -1903,7 +1928,7 @@
                     html += `
                         <tr>
                             <td>${week.week}</td>
-                            <td>${week.date}</td>
+                            <td>${formatDateMDY(week.date)}</td>
                             <td>${week.opponent}</td>
                             <td class="${resultClass}">${resultText}</td>
                             <td>${p.gm1}</td>
@@ -2334,6 +2359,17 @@
             } catch(e) { console.error(e); alert('Error saving.'); }
         }
 
+        async function deleteLeagueWeek(firebaseId, weekNum) {
+            if (!confirm('Delete this week from League Stats?')) return;
+            try {
+                if (firebaseId) {
+                    await db.collection('leagueWeeks').doc(firebaseId).delete();
+                } else {
+                    await db.collection('deletedLeagueWeeks').add({ weekNum });
+                }
+            } catch(e) { console.error(e); alert('Error deleting.'); }
+        }
+
         // ── Arsenal ───────────────────────────────────────────────────────
         function setupArsenalListener() {
             db.collection('arsenal').onSnapshot(snap => {
@@ -2550,9 +2586,9 @@
             const container=document.getElementById('ltSeriesList');
             if(!ltSeriesData.length){container.innerHTML='<p class="no-data">No series imported yet.</p>';return;}
             // Get all dates that have 3 games for linking
-            const availDates=[...new Set(currentData.games.map(g=>g.date))].sort((a,b)=>b.localeCompare(a));
+            const availDates=[...new Set(currentData.games.map(g=>g.date))].sort((a,b)=>parseDateMs(b)-parseDateMs(a));
             container.innerHTML = ltSeriesData.map(s => {
-                const dateOpts=availDates.map(d=>`<option value="${d}" ${s.linkedDate===d?'selected':''}>${d}</option>`).join('');
+                const dateOpts=availDates.map(d=>`<option value="${d}" ${s.linkedDate===d?'selected':''}>${formatDateMDY(d)}</option>`).join('');
                 const insightsHtml=s.insights?`<div class="lt-insights">${
                     [['Strikes',s.insights.strikeRate,'%'],['Spares',s.insights.spareRate,'%'],['Splits',s.insights.splitRate,'%'],
                      ['Pocket Hits',s.insights.pocketHitRate,'%'],['Carry',s.insights.carryRate,'%'],['FB Avg',s.insights.firstBallAvg,'']
